@@ -16,14 +16,14 @@ class BoxCarousel extends StatelessWidget {
     return SizedBox(
       height: 240,
       child: ListView.separated(
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         scrollDirection: Axis.horizontal,
         itemCount: storageBoxes.length,
         itemBuilder: (BuildContext context, int index) {
           return StorageBox(data: storageBoxes[index]);
         },
         separatorBuilder: (BuildContext context, int index) {
-          return CustomSpaceBoxW(24);
+          return CustomSpaceBoxW(16);
         },
       ),
     );
