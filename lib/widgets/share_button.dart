@@ -28,7 +28,7 @@ class ShareButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         clipBehavior: Clip.hardEdge,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(buttonSize/6),
         child: Ink(
           width: buttonSize,
           height: buttonSize,
