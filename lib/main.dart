@@ -1,4 +1,5 @@
 import 'package:fileexplorer/screens/creation_screen.dart';
+import 'package:fileexplorer/screens/creation_screen_zero.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: CreationScreen(),
+      home: CreationScreenZero(),
     );
   }
 }
