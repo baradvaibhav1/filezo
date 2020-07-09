@@ -1,5 +1,4 @@
 import 'package:fileexplorer/models/storage_box_data.dart';
-import 'package:fileexplorer/theme/app_colors.dart';
 import 'package:fileexplorer/widgets/custom_space_box_h.dart';
 import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
@@ -55,11 +54,11 @@ class StorageBox extends StatelessWidget {
                       Material(
                         borderRadius: BorderRadius.circular(8),
                         child: Padding(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(14),
                           child: Image.asset(
                             data.imgPath,
-                            width: 48,
-                            height: 48,
+                            width: 36,
+                            height: 36,
                           ),
                         ),
                       ),

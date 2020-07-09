@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fileexplorer/data/storage_boxes.dart';
 import 'package:fileexplorer/enums/boxtypes.dart';
-import 'file:///D:/Projects/Current%20Projects/file_explorer/lib/widgets/box_carousel.dart';
+import 'package:fileexplorer/widgets/box_carousel.dart';
 import 'package:fileexplorer/widgets/custom_space_box_w.dart';
 import 'package:fileexplorer/widgets/storage_box.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ class CreationScreen extends StatelessWidget {
           StorageBoxes.getData(BoxType.InternalStorage),
           StorageBoxes.getData(BoxType.ExternalStorage),
           StorageBoxes.getData(BoxType.GoogleDrive),
+          StorageBoxes.getData(BoxType.OneDrive),
         ],
       ),
     );
