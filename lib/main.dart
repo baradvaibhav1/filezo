@@ -3,6 +3,8 @@ import 'package:fileexplorer/screens/creation_screen_zero.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'widgets/floating_bottom_bar.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: CreationScreen(),
+      home: FloatingBottomBar(),
     );
   }
 }
