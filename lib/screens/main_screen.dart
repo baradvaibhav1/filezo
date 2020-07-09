@@ -1,18 +1,14 @@
-import 'package:fileexplorer/models/category_item_data.dart';
-import 'package:fileexplorer/theme/app_colors.dart';
-import 'package:fileexplorer/widgets/category_button.dart';
 import 'package:fileexplorer/widgets/share_button.dart';
-import 'package:fileexplorer/widgets/storage_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class CreationScreenZero extends StatefulWidget {
+class MainScreen extends StatefulWidget {
   @override
-  _CreationScreenZeroState createState() => _CreationScreenZeroState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _CreationScreenZeroState extends State<CreationScreenZero> {
-  int _currentIndex = 0;
+class _MainScreenState extends State<MainScreen> {
+
 
   @override
   Widget build(BuildContext context) {
