@@ -9,4 +9,7 @@ class AppColors {
   static const Color googleDrive = const Color(0xFF4591F2);
   static const Color oneDrive = const Color(0xFF29A8EB);
 
+  static const Color floatAppStart = const Color(0xFF4585F2);
+  static const Color floatAppEnd = const Color(0xFF454AF2);
+
 }
