@@ -10,58 +10,80 @@ class ItemListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+      contentPadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       onTap: () {},
       onLongPress: () {},
-      leading: Icon(
-        FlutterIcons.folder_faw5s,
-        size: 60,
-        color: Color(0xFFFFD26E),
+      leading: Padding(
+        padding: const EdgeInsets.only(right: 4),
+        child: SizedBox(
+          height: 48,
+          width: 48,
+          child: Stack(
+            children: <Widget>[
+              Image.asset(
+                "assets/images/music_file.png",
+                height: 48,
+                width: 48,
+              ),
+              StyledText(
+                ".mp3",
+                fontWeight: FontWeight.w500,
+                fontSize: 10,
+                textColor: Colors.white,
+              ),
+            ],
+          ),
+        ),
       ),
       title: Padding(
-        padding: const EdgeInsets.only(top: 14),
+        padding: const EdgeInsets.only(top: 0),
         child: StyledText(
-          'textValue',
+          'Presentation',
           alignment: Alignment.topLeft,
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
+          fontWeight: FontWeight.w300,
+          fontSize: 18,
+          letterSpacing: 0.0,
         ),
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 10),
         child: Row(
-          textBaseline: TextBaseline.alphabetic,
           children: <Widget>[
             Visibility(
               child: StyledText(
                 'itemCount',
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
+                fontWeight: FontWeight.w100,
+                fontSize: 12,
+                textColor: Colors.grey[400],
               ),
               visible: true,
             ),
             Visibility(
               child: StyledText(
                 '  |  ',
-                fontWeight: FontWeight.w900,
-                fontSize: 14,
+                fontWeight: FontWeight.w100,
+                fontSize: 12,
+                textColor: Colors.grey[400],
               ),
               visible: true,
             ),
             StyledText(
-              'timeStamp',
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+              '12 Mins Ago',
+              fontWeight: FontWeight.w300,
+              fontSize: 12,
+              textColor: Colors.grey[400],
             ),
             StyledText(
               '  |  ',
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w300,
               fontSize: 14,
+              textColor: Colors.grey[400],
             ),
             StyledText(
               'fileSize',
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+              fontWeight: FontWeight.w300,
+              fontSize: 12,
+              textColor: Colors.grey[400],
             ),
           ],
         ),

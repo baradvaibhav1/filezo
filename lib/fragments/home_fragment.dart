@@ -5,6 +5,7 @@ import 'package:fileexplorer/widgets/box_carousel.dart';
 import 'package:fileexplorer/widgets/category_grid.dart';
 import 'package:fileexplorer/widgets/custom_space_box_h.dart';
 import 'package:fileexplorer/widgets/heading_row.dart';
+import 'package:fileexplorer/widgets/item_list_tile.dart';
 import 'package:flutter/material.dart';
 
 class HomeFragment extends StatelessWidget {
@@ -69,7 +70,6 @@ class HomeFragment extends StatelessWidget {
       CustomSpaceBoxH(16),
       HeadingRow(
         headingText: "Categories",
-
       ),
       CustomSpaceBoxH(36),
       CategoryGrid(),
@@ -77,8 +77,18 @@ class HomeFragment extends StatelessWidget {
       HeadingRow(
         headingText: "Recents",
       ),
-      CustomSpaceBoxH(36),
-
+      CustomSpaceBoxH(24),
+      ListView.separated(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
+        itemCount: 10,
+        itemBuilder: (BuildContext context, int index) {
+          return ItemListTile();
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return CustomSpaceBoxH(8);
+        },
+      ),
     ];
 
     return list;
