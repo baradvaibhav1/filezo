@@ -15,12 +15,12 @@ class ShareButton extends StatelessWidget {
         color: Colors.transparent,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shareBtnColorEnd,
+            color: AppColors.shareBtnColorStart.withOpacity(.9),
             blurRadius: 16.0, // has the effect of softening the shadow
-            spreadRadius: 0.0, // has the effect of extending the shadow
+            spreadRadius: -10.0, // has the effect of extending the shadow
             offset: Offset(
               0.0, // horizontal, move right 10
-              16.0, // vertical, move down 10
+              18.0, // vertical, move down 10
             ),
           )
         ],
@@ -28,7 +28,7 @@ class ShareButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         clipBehavior: Clip.hardEdge,
-        borderRadius: BorderRadius.circular(buttonSize/6),
+        borderRadius: BorderRadius.circular(buttonSize/3.5),
         child: Ink(
           width: buttonSize,
           height: buttonSize,
@@ -43,10 +43,11 @@ class ShareButton extends StatelessWidget {
                 tileMode: TileMode.clamp),
           ),
           child: InkWell(
+            splashColor: Colors.orange,
             child: Icon(
               FlutterIcons.paper_plane_faw5s,
               color: Colors.white,
-              size: buttonSize * .45,
+              size: buttonSize * .4,
             ),
             onTap: (){},
           ),

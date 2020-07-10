@@ -1,10 +1,12 @@
+import 'package:fileexplorer/enums/categories.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 
-class CategoryItemData {
-  final String text;
-  final String imgPath;
-  final callback;
-  final Color color;
 
-  CategoryItemData({this.text, this.imgPath, this.callback, this.color});
+part 'category_item_data.freezed.dart';
+
+@freezed
+abstract class CategoryItemData with _$CategoryItemData {
+  const factory CategoryItemData({Categories category,String text, String imgPath, VoidCallback callback, Color color}) = _CategoryItemData;
 }

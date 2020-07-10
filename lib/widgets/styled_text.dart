@@ -41,7 +41,7 @@ class StyledText extends StatelessWidget {
         maxLines: maxLines,
         overflow: textOverflow,
         style: TextStyle(
-          color: textColor,
+          color: textColor != null ? textColor : const Color(0xff2b313f),
           decoration: TextDecoration.none,
           fontSize: fontSize,
           fontWeight: fontWeight,
