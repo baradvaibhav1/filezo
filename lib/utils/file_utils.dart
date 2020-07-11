@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:fileexplorer/enums/file_entity_type.dart';
+import 'package:fileexplorer/models/blaze_file_entity.dart';
+import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:path/path.dart';
@@ -37,6 +40,33 @@ class FileUtils {
     return filteredPaths;
   }
 
+  static BlazeFileEntity getBlazeEntity(FileSystemEntity fileSystemEntity) {
+    if (fileSystemEntity is File) {
+      return BlazeFileEntity(
+        fileEntityType: FileEntityType.File,
+        path: fileSystemEntity.path,
+        basename: basenameWithoutExtension(fileSystemEntity.path),
+        extension: extension(fileSystemEntity.path),
+        name: basename(fileSystemEntity.path),
+        mime: mime(fileSystemEntity.path),
+        size: FileUtils.formatBytes(File(fileSystemEntity.path).lengthSync(), 2),
+        timestamp:
+            File(fileSystemEntity.path).lastAccessedSync().toIso8601String(),
+        category: FileUIUtils.sortCategory(fileSystemEntity.path),
+      );
+    } else {
+      var dir = Directory(fileSystemEntity.path);
+      var stat = FileStat.statSync(fileSystemEntity.path);
+      return BlazeFileEntity(
+        fileEntityType: FileEntityType.Folder,
+        path: fileSystemEntity.path,
+        name: basename(fileSystemEntity.path),
+        timestamp: stat.accessed.toIso8601String(),
+        filesInsideCount: dir.listSync().length,
+      );
+    }
+  }
+
   static Directory removeDataDirectory(String path) {
     return Directory(path.split("Android")[0]);
   }
@@ -65,11 +95,14 @@ class FileUtils {
       bool withDirectory = true}) async {
     List<FileSystemEntity> files = [];
 
-    List<FileSystemEntity> storageDirs = storageVolumes ?? await getStorageList();
+    List<FileSystemEntity> storageDirs =
+        storageVolumes ?? await getStorageList();
 
     for (var volume in storageDirs) {
-      List<FileSystemEntity> list =
-          await getVolumeFiles(showHidden: showHidden, storageVolume: volume, withDirectory: withDirectory);
+      List<FileSystemEntity> list = await getVolumeFiles(
+          showHidden: showHidden,
+          storageVolume: volume,
+          withDirectory: withDirectory);
       files.addAll(list);
     }
     return files;
@@ -77,7 +110,8 @@ class FileUtils {
 
   static Future<List<FileSystemEntity>> getRecentFiles(
       {bool showHidden}) async {
-    List<FileSystemEntity> files = await getAllFiles(showHidden: showHidden, withDirectory: false);
+    List<FileSystemEntity> files =
+        await getAllFiles(showHidden: showHidden, withDirectory: false);
     files.sort((a, b) => File(a.path)
         .lastAccessedSync()
         .compareTo(File(b.path).lastAccessedSync()));

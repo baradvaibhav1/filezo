@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:fileexplorer/enums/file_categories.dart';
+import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/enums/view_states.dart';
+import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
@@ -11,22 +14,22 @@ import 'package:path_provider/path_provider.dart';
 class BaseProvider extends ChangeNotifier {
   List<Directory> storageVolumePaths = List(); //the mounted storage volumes
   List<StorageBoxData> storageBoxes = List();
-  List<FileSystemEntity> allFileEntities = List();
-  List<FileSystemEntity> allFiles = List();
+  List<BlazeFileEntity> allFileEntities = List();
+  List<BlazeFileEntity> allFiles = List();
 
-  List<FileSystemEntity> recentFiles = List();
+  List<BlazeFileEntity> recentFiles = List();
 
   ViewState viewState = ViewState.Free;
 
-  List<File> audioList = [];
-  List<File> imagesList = [];
-  List<File> videosList = [];
-  List<File> apksList = [];
-  List<File> screenshotsList = [];
-  List<File> archivesList = [];
-  List<File> downloadsList = [];
-  List<File> docsList = [];
-  List<File> unknownList = [];
+  List<BlazeFileEntity> audioList = [];
+  List<BlazeFileEntity> imagesList = [];
+  List<BlazeFileEntity> videosList = [];
+  List<BlazeFileEntity> apksList = [];
+  List<BlazeFileEntity> screenshotsList = [];
+  List<BlazeFileEntity> archivesList = [];
+  List<BlazeFileEntity> downloadsList = [];
+  List<BlazeFileEntity> docsList = [];
+  List<BlazeFileEntity> unknownList = [];
 
   BaseProvider() {
     //checkSpace();
@@ -40,16 +43,13 @@ class BaseProvider extends ChangeNotifier {
     storageVolumePaths = await FileUtils.getStorageList();
     print(storageVolumePaths);
 
-    allFileEntities = await FileUtils.getAllFiles(
-        storageVolumes: storageVolumePaths, showHidden: true);
+    await getAllFiles(storageVolumes: storageVolumePaths);
     print(allFileEntities.length);
-    await pruneFiles();
     print("Files Only : ${allFiles.length}");
-    await categorizeFiles();
     print("Images Count : ${imagesList.length}");
     print("Docs Count : ${docsList.length}");
     print("Unknown Count : ${unknownList.length}");
-    await getRecentFiles();
+    //await getRecentFiles();
     print(recentFiles);
     setLoading(ViewState.Free);
     notifyListeners();
@@ -76,34 +76,32 @@ class BaseProvider extends ChangeNotifier {
     allFiles = allFileEntities.where((element) => element is File).toList();
   }
 
-  categorizeFiles() async {
-    allFiles.forEach((file) {
-      var type = FileUIUtils.sortCategory(file.path);
+  categorizeFile(BlazeFileEntity file) async {
+    var type = file.category;
 
-      switch (type) {
-        case FileCategory.Image:
-          imagesList.add(file);
-          break;
-        case FileCategory.Audio:
-          audioList.add(file);
-          break;
-        case FileCategory.Doc:
-          docsList.add(file);
-          break;
-        case FileCategory.Video:
-          videosList.add(file);
-          break;
-        case FileCategory.Archive:
-          archivesList.add(file);
-          break;
-        case FileCategory.APK:
-          apksList.add(file);
-          break;
-        default:
-          unknownList.add(file);
-          break;
-      }
-    });
+    switch (type) {
+      case FileCategory.Image:
+        imagesList.add(file);
+        break;
+      case FileCategory.Audio:
+        audioList.add(file);
+        break;
+      case FileCategory.Doc:
+        docsList.add(file);
+        break;
+      case FileCategory.Video:
+        videosList.add(file);
+        break;
+      case FileCategory.Archive:
+        archivesList.add(file);
+        break;
+      case FileCategory.APK:
+        apksList.add(file);
+        break;
+      default:
+        unknownList.add(file);
+        break;
+    }
   }
 
   getRecentFiles() async {
@@ -114,4 +112,55 @@ class BaseProvider extends ChangeNotifier {
   setLoading(ViewState state) {
     viewState = state;
   }
+
+
+  Future getVolumeFiles(
+      {bool showHidden = false,
+        Directory storageVolume,
+        bool withDirectory = true}) async {
+
+    print("Storage Volume : $storageVolume");
+    var files = <BlazeFileEntity>[];
+
+
+    var dir = storageVolume;
+    await dir.list(recursive: true).forEach((f) {
+      var blazeFileEntity = FileUtils.getBlazeEntity(f);
+
+      if (blazeFileEntity.fileEntityType == FileEntityType.Folder) {
+        allFileEntities.add(blazeFileEntity);
+      } else {
+        allFileEntities.add(blazeFileEntity);
+        allFiles.add(blazeFileEntity);
+
+        categorizeFile(blazeFileEntity);
+      }
+    });
+
+
+  }
+
+
+
+  Future<List<BlazeFileEntity>> getAllFiles(
+      {bool showHidden = false,
+        List<FileSystemEntity> storageVolumes,
+        bool withDirectory = true}) async {
+    List<BlazeFileEntity> files = [];
+
+    List<FileSystemEntity> storageDirs =
+        storageVolumes ?? await FileUtils.getStorageList();
+
+    print("Storage");
+    print(storageDirs);
+
+    for (var volume in storageDirs) {
+       await getVolumeFiles(
+          showHidden: showHidden,
+          storageVolume: volume,
+          withDirectory: withDirectory);
+    }
+    return files;
+  }
+
 }
