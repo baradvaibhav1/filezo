@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -45,18 +46,38 @@ class FileUtils {
     return dir.listSync();
   }
 
-  static Future<List<FileSystemEntity>> getAllFiles({bool showHidden}) async {
-    List<Directory> storages = await getStorageList();
-    List<FileSystemEntity> files = List<FileSystemEntity>();
-    for (Directory dir in storages) {
-      files.addAll(await getAllFilesInPath(dir.path, showHidden: showHidden));
+  static Future<List<FileSystemEntity>> getVolumeFiles(
+      {bool showHidden = false,
+      Directory storageVolume,
+      bool withDirectory = true}) {
+    var files = <FileSystemEntity>[];
+    var completer = Completer<List<FileSystemEntity>>();
+    var lister = storageVolume.list(recursive: true);
+    lister.listen((file) => withDirectory ? files.add(file) : {},
+        // should also register onError
+        onDone: () => completer.complete(files));
+    return completer.future;
+  }
+
+  static Future<List<FileSystemEntity>> getAllFiles(
+      {bool showHidden,
+      List<FileSystemEntity> storageVolumes,
+      bool withDirectory = true}) async {
+    List<FileSystemEntity> files = [];
+
+    List<FileSystemEntity> storageDirs = storageVolumes ?? await getStorageList();
+
+    for (var volume in storageDirs) {
+      List<FileSystemEntity> list =
+          await getVolumeFiles(showHidden: showHidden, storageVolume: volume, withDirectory: withDirectory);
+      files.addAll(list);
     }
     return files;
   }
 
   static Future<List<FileSystemEntity>> getRecentFiles(
       {bool showHidden}) async {
-    List<FileSystemEntity> files = await getAllFiles(showHidden: showHidden);
+    List<FileSystemEntity> files = await getAllFiles(showHidden: showHidden, withDirectory: false);
     files.sort((a, b) => File(a.path)
         .lastAccessedSync()
         .compareTo(File(b.path).lastAccessedSync()));

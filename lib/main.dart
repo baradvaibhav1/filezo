@@ -1,13 +1,23 @@
+import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/screens/creation_screen.dart';
 import 'package:fileexplorer/screens/creation_screen_zero.dart';
 import 'package:fileexplorer/screens/main_screen.dart';
+import 'package:fileexplorer/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'widgets/floating_bottom_bar.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BaseProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -41,7 +51,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: MainScreen(),
+      home: Splash(),
     );
   }
 }

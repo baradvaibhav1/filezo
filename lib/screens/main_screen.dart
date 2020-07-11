@@ -2,9 +2,11 @@ import 'package:fileexplorer/fragments/favorites_fragment.dart';
 import 'package:fileexplorer/fragments/home_fragment.dart';
 import 'package:fileexplorer/fragments/settings_fragment.dart';
 import 'package:fileexplorer/fragments/trash_fragment.dart';
+import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/widgets/share_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -64,63 +66,68 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: ShareButton(
-        buttonSize: 64,
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(FlutterIcons.home_faw),
-                onPressed: () {},
-                iconSize: 24,
-              ),
-              IconButton(
-                icon: Icon(FlutterIcons.game_controller_ent),
-                onPressed: () {},
-                iconSize: 24,
-              ),
-              Visibility(
-                visible: false,
-                child: IconButton(
-                  icon: Icon(FlutterIcons.folder_faw5),
-                  onPressed: () {},
-                  iconSize: 24,
-                ),
-              ),
-              IconButton(
-                icon: Icon(FlutterIcons.folder_faw5),
-                onPressed: () {},
-                iconSize: 24,
-              ),
-              IconButton(
-                icon: Icon(FlutterIcons.settings_fea),
-                onPressed: () {},
-                iconSize: 24,
-              ),
-            ],
+    return Consumer<BaseProvider>(
+      builder: (BuildContext context, BaseProvider baseProvider, Widget child) {
+        return Scaffold(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: ShareButton(
+            buttonSize: 64,
           ),
-        ),
-      ),
-      body: PageView.builder(
-        physics: AlwaysScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          if (index == 0) return this.homeFragment();
-          if (index == 1) return this.favoritesFragment();
-          if (index == 2) return this.trashFragment();
-          if (index == 3) return this.settingsFragment();
-          return null;
-        },
-        pageSnapping: true,
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-      ),
+          bottomNavigationBar: BottomAppBar(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(FlutterIcons.home_faw),
+                    onPressed: () {},
+                    iconSize: 24,
+                  ),
+                  IconButton(
+                    icon: Icon(FlutterIcons.game_controller_ent),
+                    onPressed: () {},
+                    iconSize: 24,
+                  ),
+                  Visibility(
+                    visible: false,
+                    child: IconButton(
+                      icon: Icon(FlutterIcons.folder_faw5),
+                      onPressed: () {},
+                      iconSize: 24,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(FlutterIcons.folder_faw5),
+                    onPressed: () {},
+                    iconSize: 24,
+                  ),
+                  IconButton(
+                    icon: Icon(FlutterIcons.settings_fea),
+                    onPressed: () {},
+                    iconSize: 24,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: PageView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              if (index == 0) return this.homeFragment();
+              if (index == 1) return this.favoritesFragment();
+              if (index == 2) return this.trashFragment();
+              if (index == 3) return this.settingsFragment();
+              return null;
+            },
+            pageSnapping: true,
+            controller: _pageController,
+            onPageChanged: _onPageChanged,
+          ),
+        );
+      },
     );
   }
 }
