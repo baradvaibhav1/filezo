@@ -37,6 +37,27 @@ class FileUIUtils {
     }
   }
 
+
+  static String getFileIconFromCategory(FileCategory category) {
+      switch (category) {
+        case FileCategory.Image:
+          return "assets/images/video_file.png";
+        case FileCategory.Video:
+          return "assets/images/video_file.png";
+        case FileCategory.Audio:
+          return "assets/images/music_file.png";
+        case FileCategory.Doc:
+          return "assets/images/doc_file.png";
+        case FileCategory.Archive:
+          return "assets/images/unrecognized_file.png";
+        case FileCategory.APK:
+          return "assets/images/apk_file.png";
+        default:
+          return "assets/images/unrecognized_file.png";
+      }
+  }
+
+
   static FileCategory sortCategory(String path) {
     File f = File(path);
     String _extension = extension(f.path).toLowerCase();

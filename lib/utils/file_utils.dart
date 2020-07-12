@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:fileexplorer/enums/file_categories.dart';
 import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:path/path.dart';
@@ -12,6 +15,13 @@ import 'package:path_provider/path_provider.dart';
 
 class FileUtils {
   static String waPath = "/storage/emulated/0/WhatsApp/Media/.Statuses";
+  static Uint8List placeHolder;
+
+  static loadPlaceHolder() async {
+    placeHolder = (await rootBundle.load("assets/images/category/images.png"))
+        .buffer
+        .asUint8List();
+  }
 
   /// Convert Byte to KB, MB, .......
   static String formatBytes(bytes, decimals) {
@@ -40,7 +50,8 @@ class FileUtils {
     return filteredPaths;
   }
 
-  static BlazeFileEntity getBlazeEntity(FileSystemEntity fileSystemEntity) {
+  static Future<BlazeFileEntity> getBlazeEntity(
+      FileSystemEntity fileSystemEntity) async {
     if (fileSystemEntity is File) {
       return BlazeFileEntity(
         fileEntityType: FileEntityType.File,
@@ -49,22 +60,50 @@ class FileUtils {
         extension: extension(fileSystemEntity.path),
         name: basename(fileSystemEntity.path),
         mime: mime(fileSystemEntity.path),
-        size: FileUtils.formatBytes(File(fileSystemEntity.path).lengthSync(), 2),
+        size: FileUtils.formatBytes(await fileSystemEntity.length(), 2),
         timestamp:
-            File(fileSystemEntity.path).lastAccessedSync().toIso8601String(),
+            (await fileSystemEntity.lastAccessed()).millisecondsSinceEpoch,
         category: FileUIUtils.sortCategory(fileSystemEntity.path),
+        file: fileSystemEntity,
       );
     } else {
       var dir = Directory(fileSystemEntity.path);
-      var stat = FileStat.statSync(fileSystemEntity.path);
+      var stat = await FileStat.stat(fileSystemEntity.path);
       return BlazeFileEntity(
         fileEntityType: FileEntityType.Folder,
         path: fileSystemEntity.path,
         name: basename(fileSystemEntity.path),
-        timestamp: stat.accessed.toIso8601String(),
-        filesInsideCount: dir.listSync().length,
+        timestamp: stat.accessed.millisecondsSinceEpoch,
+        filesInsideCount: (await dir.list().length),
       );
     }
+  }
+
+  static bool isHidden(FileSystemEntity file) {
+    if (basename(file.path).startsWith(".") ||
+        file.path.contains("/.") ||
+        (file.path.contains("/Android")) ||
+        file.path.toLowerCase().contains("/private")) return true;
+
+    return false;
+  }
+
+  static bool isBlazeHidden(BlazeFileEntity file) {
+    if (basename(file.path).startsWith(".")) return true;
+
+    return false;
+  }
+
+  static bool isBlazeFolder(BlazeFileEntity file) {
+    if (file.fileEntityType == FileEntityType.Folder) return true;
+
+    return false;
+  }
+
+  static bool isBlazeImage(BlazeFileEntity file) {
+    if (file.category == FileCategory.Image) return true;
+
+    return false;
   }
 
   static Directory removeDataDirectory(String path) {
@@ -184,6 +223,26 @@ class FileUtils {
       return "Yesterday ${DateFormat("HH:mm").format(DateTime.parse(iso))}";
     } else {
       return "${DateFormat("MMM dd, HH:mm").format(DateTime.parse(iso))}";
+    }
+  }
+
+  static String formatTimeFromEpoch(int iso) {
+    DateTime date = DateTime.fromMicrosecondsSinceEpoch(iso);
+    DateTime now = DateTime.now();
+    DateTime yDay = DateTime.now().subtract(Duration(days: 1));
+    DateTime dateFormat = DateTime.parse(
+        "${date.year}-${date.month.toString().padLeft(2, "0")}-${date.day.toString().padLeft(2, "0")}T00:00:00.000Z");
+    DateTime today = DateTime.parse(
+        "${now.year}-${now.month.toString().padLeft(2, "0")}-${now.day.toString().padLeft(2, "0")}T00:00:00.000Z");
+    DateTime yesterday = DateTime.parse(
+        "${yDay.year}-${yDay.month.toString().padLeft(2, "0")}-${yDay.day.toString().padLeft(2, "0")}T00:00:00.000Z");
+
+    if (dateFormat == today) {
+      return "Today ${DateFormat("HH:mm").format(date)}";
+    } else if (dateFormat == yesterday) {
+      return "Yesterday ${DateFormat("HH:mm").format(date)}";
+    } else {
+      return "${DateFormat("MMM dd, HH:mm").format(date)}";
     }
   }
 

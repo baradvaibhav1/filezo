@@ -1,12 +1,15 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fileexplorer/data/storage_boxes.dart';
 import 'package:fileexplorer/enums/boxtypes.dart';
+import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/widgets/box_carousel.dart';
 import 'package:fileexplorer/widgets/category_grid.dart';
 import 'package:fileexplorer/widgets/custom_space_box_h.dart';
 import 'package:fileexplorer/widgets/heading_row.dart';
 import 'package:fileexplorer/widgets/item_list_tile.dart';
+import 'package:fileexplorer/widgets/loading_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeFragment extends StatelessWidget {
   @override
@@ -57,6 +60,11 @@ class HomeFragment extends StatelessWidget {
   }
 
   List<Widget> _getWidgetList(BuildContext context) {
+    BaseProvider baseProvider =
+        Provider.of<BaseProvider>(context, listen: true);
+
+    var isLoadingComplete = baseProvider.initLoadingComplete;
+
     List<Widget> list = [
       CustomSpaceBoxH(24),
       BoxCarousel(
@@ -81,9 +89,9 @@ class HomeFragment extends StatelessWidget {
       ListView.separated(
         shrinkWrap: true,
         physics: ClampingScrollPhysics(),
-        itemCount: 10,
+        itemCount: isLoadingComplete ? baseProvider.recentFiles.length : 5,
         itemBuilder: (BuildContext context, int index) {
-          return ItemListTile();
+          return isLoadingComplete ? ItemListTile(file: baseProvider.recentFiles[index]): LoadingListTile();
         },
         separatorBuilder: (BuildContext context, int index) {
           return CustomSpaceBoxH(8);

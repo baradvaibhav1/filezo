@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fileexplorer/enums/categories.dart';
 import 'package:fileexplorer/enums/file_categories.dart';
 import 'package:fileexplorer/enums/file_entity_type.dart';
@@ -17,8 +19,9 @@ abstract class BlazeFileEntity with _$BlazeFileEntity {
     String name,
     String mime,
     String size,
-    String timestamp,
+    int timestamp,
     FileCategory category,
     int filesInsideCount,
+    File file,
   }) = _BlazeFileEntity;
 }
