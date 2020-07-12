@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'widgets/floating_bottom_bar.dart';
 
 void main() {
+  CustomImageCache();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
@@ -18,6 +20,17 @@ void main() {
       child: MyApp(),
     ),
   );
+}
+
+
+class CustomImageCache extends WidgetsFlutterBinding {
+  @override
+  ImageCache createImageCache() {
+    ImageCache imageCache = super.createImageCache();
+    // Set your image cache size
+    imageCache.maximumSizeBytes = 1024 * 1024 * 512; // 100 MB
+    return imageCache;
+  }
 }
 
 class MyApp extends StatelessWidget {

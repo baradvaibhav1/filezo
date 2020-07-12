@@ -19,7 +19,7 @@ abstract class BlazeFileEntity with _$BlazeFileEntity {
     String name,
     String mime,
     String size,
-    int timestamp,
+    String timestamp,
     FileCategory category,
     int filesInsideCount,
     File file,

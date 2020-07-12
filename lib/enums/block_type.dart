@@ -1,0 +1,4 @@
+enum BlockType{
+  DateWise,
+  Album,
+}

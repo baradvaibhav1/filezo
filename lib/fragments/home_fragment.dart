@@ -47,7 +47,8 @@ class HomeFragment extends StatelessWidget {
         itemCount: widgetList.length,
         itemBuilder: (BuildContext context, int index) {
           if (widgetList[index] is! Divider &&
-              widgetList[index] is! BoxCarousel)
+              widgetList[index] is! BoxCarousel &&
+              widgetList[index] is! ListView)
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: widgetList[index],
@@ -91,7 +92,9 @@ class HomeFragment extends StatelessWidget {
         physics: ClampingScrollPhysics(),
         itemCount: isLoadingComplete ? baseProvider.recentFiles.length : 5,
         itemBuilder: (BuildContext context, int index) {
-          return isLoadingComplete ? ItemListTile(file: baseProvider.recentFiles[index]): LoadingListTile();
+          return isLoadingComplete
+              ? BlazeItemTile(file: baseProvider.recentFiles[index])
+              : LoadingListTile();
         },
         separatorBuilder: (BuildContext context, int index) {
           return CustomSpaceBoxH(8);

@@ -20,7 +20,7 @@ class _$BlazeFileEntityTearOff {
       String name,
       String mime,
       String size,
-      int timestamp,
+      String timestamp,
       FileCategory category,
       int filesInsideCount,
       File file}) {
@@ -51,7 +51,7 @@ mixin _$BlazeFileEntity {
   String get name;
   String get mime;
   String get size;
-  int get timestamp;
+  String get timestamp;
   FileCategory get category;
   int get filesInsideCount;
   File get file;
@@ -71,7 +71,7 @@ abstract class $BlazeFileEntityCopyWith<$Res> {
       String name,
       String mime,
       String size,
-      int timestamp,
+      String timestamp,
       FileCategory category,
       int filesInsideCount,
       File file});
@@ -109,7 +109,7 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
       name: name == freezed ? _value.name : name as String,
       mime: mime == freezed ? _value.mime : mime as String,
       size: size == freezed ? _value.size : size as String,
-      timestamp: timestamp == freezed ? _value.timestamp : timestamp as int,
+      timestamp: timestamp == freezed ? _value.timestamp : timestamp as String,
       category:
           category == freezed ? _value.category : category as FileCategory,
       filesInsideCount: filesInsideCount == freezed
@@ -134,7 +134,7 @@ abstract class _$BlazeFileEntityCopyWith<$Res>
       String name,
       String mime,
       String size,
-      int timestamp,
+      String timestamp,
       FileCategory category,
       int filesInsideCount,
       File file});
@@ -174,7 +174,7 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
       name: name == freezed ? _value.name : name as String,
       mime: mime == freezed ? _value.mime : mime as String,
       size: size == freezed ? _value.size : size as String,
-      timestamp: timestamp == freezed ? _value.timestamp : timestamp as int,
+      timestamp: timestamp == freezed ? _value.timestamp : timestamp as String,
       category:
           category == freezed ? _value.category : category as FileCategory,
       filesInsideCount: filesInsideCount == freezed
@@ -216,7 +216,7 @@ class _$_BlazeFileEntity
   @override
   final String size;
   @override
-  final int timestamp;
+  final String timestamp;
   @override
   final FileCategory category;
   @override
@@ -310,7 +310,7 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
       String name,
       String mime,
       String size,
-      int timestamp,
+      String timestamp,
       FileCategory category,
       int filesInsideCount,
       File file}) = _$_BlazeFileEntity;
@@ -330,7 +330,7 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
   @override
   String get size;
   @override
-  int get timestamp;
+  String get timestamp;
   @override
   FileCategory get category;
   @override

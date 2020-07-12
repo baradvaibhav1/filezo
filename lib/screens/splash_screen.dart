@@ -1,4 +1,5 @@
 import 'package:fileexplorer/providers/base_provider.dart';
+import 'package:fileexplorer/screens/image_category_screen.dart';
 import 'package:fileexplorer/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 

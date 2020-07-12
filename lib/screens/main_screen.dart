@@ -25,7 +25,9 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     this._currentIndex = 0;
+
     super.initState();
+
   }
 
   Widget homeFragment() {
@@ -66,68 +68,63 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BaseProvider>(
-      builder: (BuildContext context, BaseProvider baseProvider, Widget child) {
-        return Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: ShareButton(
-            buttonSize: 64,
-          ),
-          bottomNavigationBar: BottomAppBar(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(FlutterIcons.home_faw),
-                    onPressed: () {},
-                    iconSize: 24,
-                  ),
-                  IconButton(
-                    icon: Icon(FlutterIcons.game_controller_ent),
-                    onPressed: () {},
-                    iconSize: 24,
-                  ),
-                  Visibility(
-                    visible: false,
-                    child: IconButton(
-                      icon: Icon(FlutterIcons.folder_faw5),
-                      onPressed: () {},
-                      iconSize: 24,
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(FlutterIcons.folder_faw5),
-                    onPressed: () {},
-                    iconSize: 24,
-                  ),
-                  IconButton(
-                    icon: Icon(FlutterIcons.settings_fea),
-                    onPressed: () {},
-                    iconSize: 24,
-                  ),
-                ],
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ShareButton(
+        buttonSize: 64,
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(FlutterIcons.home_faw),
+                onPressed: () {},
+                iconSize: 24,
               ),
-            ),
+              IconButton(
+                icon: Icon(FlutterIcons.game_controller_ent),
+                onPressed: () {},
+                iconSize: 24,
+              ),
+              Visibility(
+                visible: false,
+                child: IconButton(
+                  icon: Icon(FlutterIcons.folder_faw5),
+                  onPressed: () {},
+                  iconSize: 24,
+                ),
+              ),
+              IconButton(
+                icon: Icon(FlutterIcons.folder_faw5),
+                onPressed: () {},
+                iconSize: 24,
+              ),
+              IconButton(
+                icon: Icon(FlutterIcons.settings_fea),
+                onPressed: () {},
+                iconSize: 24,
+              ),
+            ],
           ),
-          body: PageView.builder(
-            physics: NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              if (index == 0) return this.homeFragment();
-              if (index == 1) return this.favoritesFragment();
-              if (index == 2) return this.trashFragment();
-              if (index == 3) return this.settingsFragment();
-              return null;
-            },
-            pageSnapping: true,
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-          ),
-        );
-      },
+        ),
+      ),
+      body: PageView.builder(
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) return this.homeFragment();
+          if (index == 1) return this.favoritesFragment();
+          if (index == 2) return this.trashFragment();
+          if (index == 3) return this.settingsFragment();
+          return null;
+        },
+        pageSnapping: true,
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+      ),
     );
   }
 }

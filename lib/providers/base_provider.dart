@@ -1,20 +1,17 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:fileexplorer/enums/file_categories.dart';
-import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/enums/view_states.dart';
+import 'package:fileexplorer/models/blaze_block.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
-import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 class BaseProvider extends ChangeNotifier {
-  static const int RECENT_FILES_MAX = 30;
+  static const int RECENT_FILES_MAX = 10;
 
   List<Directory> storageVolumePaths = List(); //the mounted storage volumes
   List<StorageBoxData> storageBoxes = List();
@@ -23,21 +20,20 @@ class BaseProvider extends ChangeNotifier {
 
   List<BlazeFileEntity> recentFiles = List();
 
-  List<BlazeFileEntity> audioList = [];
+  List<BlazeBlock> audioList = [];
+  List<BlazeBlock> imagesList = [];
+  List<BlazeBlock> videosList = [];
+  List<BlazeBlock> apksList = [];
+  List<BlazeBlock> archivesList = [];
+  List<BlazeBlock> docsList = [];
+  List<BlazeBlock> unknownList = [];
 
-  List<BlazeFileEntity> imagesList = [];
-  List<BlazeFileEntity> videosList = [];
-  List<BlazeFileEntity> apksList = [];
-  List<BlazeFileEntity> screenshotsList = [];
-  List<BlazeFileEntity> archivesList = [];
   List<BlazeFileEntity> downloadsList = [];
-  List<BlazeFileEntity> docsList = [];
-  List<BlazeFileEntity> unknownList = [];
+  List<BlazeFileEntity> screenshotsList = [];
   List<BlazeFileEntity> recognizedList = [];
 
   ViewState viewState = ViewState.Free;
   bool initLoadingComplete = false;
-
 
   BaseProvider() {
     //checkSpace();
@@ -54,7 +50,7 @@ class BaseProvider extends ChangeNotifier {
     print(storageVolumePaths);
 
     await getAllFiles(storageVolumes: storageVolumePaths);
-    print(allFileEntities.length);
+    print("Files & Folders : ${allFileEntities.length}");
     print("Files Only : ${allFiles.length}");
     print("Images Count : ${imagesList.length}");
     print("Docs Count : ${docsList.length}");
@@ -90,30 +86,6 @@ class BaseProvider extends ChangeNotifier {
     var type = file.category;
 
     if (type != FileCategory.Unknown) recognizedList.add(file);
-
-    switch (type) {
-      case FileCategory.Image:
-        imagesList.add(file);
-        break;
-      case FileCategory.Audio:
-        audioList.add(file);
-        break;
-      case FileCategory.Doc:
-        docsList.add(file);
-        break;
-      case FileCategory.Video:
-        videosList.add(file);
-        break;
-      case FileCategory.Archive:
-        archivesList.add(file);
-        break;
-      case FileCategory.APK:
-        apksList.add(file);
-        break;
-      default:
-        unknownList.add(file);
-        break;
-    }
   }
 
   setLoading(ViewState state) {
@@ -141,9 +113,12 @@ class BaseProvider extends ChangeNotifier {
         allFileEntities.add(blazeFileEntity);
         allFiles.add(blazeFileEntity);
 
-        categorizeFile(blazeFileEntity);
+
+        await blockifyImage(blazeFileEntity);
       }
     });
+
+    return;
   }
 
   Future<List<BlazeFileEntity>> getAllFiles(
@@ -155,7 +130,6 @@ class BaseProvider extends ChangeNotifier {
     List<FileSystemEntity> storageDirs =
         storageVolumes ?? await FileUtils.getStorageList();
 
-    print("Storage");
     print(storageDirs);
 
     for (var volume in storageDirs) {
@@ -200,4 +174,50 @@ class BaseProvider extends ChangeNotifier {
             ? RECENT_FILES_MAX
             : recognizedList.length));
   }
+
+  Future blockifyImage(BlazeFileEntity file) async {
+    var type = file.category;
+
+    if (type != FileCategory.Unknown) recognizedList.add(file);
+
+
+    var dirName = FileUtils.getExactDirectory(file.path);
+    List<BlazeBlock> blockList;
+
+    switch (type) {
+      case FileCategory.Image:
+        blockList = imagesList;
+        break;
+      case FileCategory.Audio:
+        blockList = audioList;
+        break;
+      case FileCategory.Doc:
+        blockList = docsList;
+        break;
+      case FileCategory.Video:
+        blockList = videosList;
+        break;
+      case FileCategory.Archive:
+        blockList = archivesList;
+        break;
+      case FileCategory.APK:
+        blockList = apksList;
+        break;
+      default:
+        blockList = unknownList;
+        break;
+    }
+
+    var block =
+        blockList.firstWhere((element) => element.name == dirName, orElse: () {
+          var newBlock = new BlazeBlock(dirName);
+          blockList.add(newBlock);
+      return newBlock;
+    });
+
+    await block.addFile(file);
+
+    return;
+  }
+
 }

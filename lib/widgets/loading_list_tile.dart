@@ -17,7 +17,7 @@ class LoadingListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       onLongPress: () {},
       leading: Padding(
         padding: const EdgeInsets.only(right: 4),

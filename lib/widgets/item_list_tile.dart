@@ -8,11 +8,11 @@ import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
-class ItemListTile extends StatelessWidget {
+class BlazeItemTile extends StatelessWidget {
   final BlazeFileEntity file;
   final onTap;
 
-  const ItemListTile({
+  const BlazeItemTile({
     Key key,
     this.file,
     this.onTap,
@@ -23,7 +23,7 @@ class ItemListTile extends StatelessWidget {
     var isFolder = FileUtils.isBlazeFolder(file);
     var isImage = FileUtils.isBlazeImage(file);
     return ListTile(
-      contentPadding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
       onTap: onTap,
       onLongPress: () {},
       leading: Padding(
@@ -66,9 +66,10 @@ class ItemListTile extends StatelessWidget {
           file.name,
           alignment: Alignment.topLeft,
           fontWeight: FontWeight.w300,
-          fontSize: 18,
+          fontSize: 16,
           letterSpacing: 0.0,
           maxLines: 1,
+          textColor: Colors.black,
           textOverflow: TextOverflow.ellipsis,
         ),
       ),
@@ -95,7 +96,7 @@ class ItemListTile extends StatelessWidget {
               visible: isFolder,
             ),
             StyledText(
-              FileUtils.formatTimeFromEpoch(file.timestamp),
+              FileUtils.formatTime(file.timestamp),
               fontWeight: FontWeight.w300,
               fontSize: 12,
               textColor: Colors.grey[400],

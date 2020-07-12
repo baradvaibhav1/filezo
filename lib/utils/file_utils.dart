@@ -18,7 +18,7 @@ class FileUtils {
   static Uint8List placeHolder;
 
   static loadPlaceHolder() async {
-    placeHolder = (await rootBundle.load("assets/images/category/images.png"))
+    placeHolder = (await rootBundle.load("assets/images/placeholder.png"))
         .buffer
         .asUint8List();
   }
@@ -61,10 +61,9 @@ class FileUtils {
         name: basename(fileSystemEntity.path),
         mime: mime(fileSystemEntity.path),
         size: FileUtils.formatBytes(await fileSystemEntity.length(), 2),
-        timestamp:
-            (await fileSystemEntity.lastAccessed()).millisecondsSinceEpoch,
+        timestamp: (await fileSystemEntity.lastAccessed()).toIso8601String(),
         category: FileUIUtils.sortCategory(fileSystemEntity.path),
-        file: fileSystemEntity,
+        file : fileSystemEntity,
       );
     } else {
       var dir = Directory(fileSystemEntity.path);
@@ -73,7 +72,7 @@ class FileUtils {
         fileEntityType: FileEntityType.Folder,
         path: fileSystemEntity.path,
         name: basename(fileSystemEntity.path),
-        timestamp: stat.accessed.millisecondsSinceEpoch,
+        timestamp: stat.accessed.toIso8601String(),
         filesInsideCount: (await dir.list().length),
       );
     }
@@ -218,11 +217,11 @@ class FileUtils {
         "${yDay.year}-${yDay.month.toString().padLeft(2, "0")}-${yDay.day.toString().padLeft(2, "0")}T00:00:00.000Z");
 
     if (dateFormat == today) {
-      return "Today ${DateFormat("HH:mm").format(DateTime.parse(iso))}";
+      return "Today ${DateFormat("HH:mm").format(date)}";
     } else if (dateFormat == yesterday) {
-      return "Yesterday ${DateFormat("HH:mm").format(DateTime.parse(iso))}";
+      return "Yesterday ${DateFormat("HH:mm").format(date)}";
     } else {
-      return "${DateFormat("MMM dd, HH:mm").format(DateTime.parse(iso))}";
+      return "${DateFormat("dd MMM yy, HH:mm").format(date)}";
     }
   }
 
@@ -325,5 +324,11 @@ class FileUtils {
       default:
         return list..sort();
     }
+  }
+
+
+  static String getExactDirectory(String path){
+    var pathArr = dirname(path).split('/');
+    return pathArr[pathArr.length-1];
   }
 }
