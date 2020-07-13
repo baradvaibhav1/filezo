@@ -18,12 +18,22 @@ class ImageViewerScreen extends StatefulWidget {
 class _ImageViewerScreenState extends State<ImageViewerScreen> {
 
   PageController _pageController;
+  String heroTag;
+  int _currentIndex;
 
   @override
   void initState() {
-
-    _pageController = PageController(initialPage: widget.initialIndex);
+    _currentIndex = widget.initialIndex;
+    _pageController = PageController(initialPage: _currentIndex);
+    heroTag = widget.block.list[_currentIndex].path;
     super.initState();
+  }
+
+  _onPageChanged(int value){
+    setState(() {
+      _currentIndex = value;
+      heroTag = widget.block.list[_currentIndex].path;
+    });
   }
 
   @override
@@ -35,9 +45,10 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
         body: PhotoViewGallery.builder(
           pageController: _pageController,
           itemCount: widget.block.fileCount,
+          onPageChanged: _onPageChanged,
           builder: (context, index) {
             return PhotoViewGalleryPageOptions(
-              heroAttributes: PhotoViewHeroAttributes(tag: widget.block.list[index].path),
+              heroAttributes: PhotoViewHeroAttributes(tag: heroTag),
               imageProvider: FileImage(widget.block.list[index].file),
               minScale: PhotoViewComputedScale.contained * 0.8,
               maxScale: PhotoViewComputedScale.covered * 2,

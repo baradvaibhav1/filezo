@@ -23,5 +23,9 @@ abstract class BlazeFileEntity with _$BlazeFileEntity {
     FileCategory category,
     int filesInsideCount,
     File file,
+    int imageWidth,
+    int imageHeight,
+    int cacheWidth,
+    int cacheHeight,
   }) = _BlazeFileEntity;
 }

@@ -59,7 +59,7 @@ class BaseProvider extends ChangeNotifier {
     print("Docs Count : ${getBlazeCategory(FileCategory.Doc).filesCount}");
     print(
         "Unknown Count : ${getBlazeCategory(FileCategory.Unknown).filesCount}");
-    print("Recognizedd Count : ${recognizedList.length}");
+    print("Recognized Count : ${recognizedList.length}");
     await sortFiles();
     print("Sorting Done");
     await getRecentFiles();

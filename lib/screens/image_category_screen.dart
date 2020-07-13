@@ -105,7 +105,7 @@ class ImagesTab extends StatelessWidget {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          transitionDuration: Duration(milliseconds: 600),
+                          transitionDuration: Duration(milliseconds: 500),
                           pageBuilder: (_, __, ___) => ImageViewerScreen(block,index),
                         ),
                       );

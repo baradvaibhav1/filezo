@@ -23,7 +23,11 @@ class _$BlazeFileEntityTearOff {
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file}) {
+      File file,
+      int imageWidth,
+      int imageHeight,
+      int cacheWidth,
+      int cacheHeight}) {
     return _BlazeFileEntity(
       fileEntityType: fileEntityType,
       path: path,
@@ -36,6 +40,10 @@ class _$BlazeFileEntityTearOff {
       category: category,
       filesInsideCount: filesInsideCount,
       file: file,
+      imageWidth: imageWidth,
+      imageHeight: imageHeight,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
     );
   }
 }
@@ -55,6 +63,10 @@ mixin _$BlazeFileEntity {
   FileCategory get category;
   int get filesInsideCount;
   File get file;
+  int get imageWidth;
+  int get imageHeight;
+  int get cacheWidth;
+  int get cacheHeight;
 
   $BlazeFileEntityCopyWith<BlazeFileEntity> get copyWith;
 }
@@ -74,7 +86,11 @@ abstract class $BlazeFileEntityCopyWith<$Res> {
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file});
+      File file,
+      int imageWidth,
+      int imageHeight,
+      int cacheWidth,
+      int cacheHeight});
 }
 
 class _$BlazeFileEntityCopyWithImpl<$Res>
@@ -98,6 +114,10 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
     Object category = freezed,
     Object filesInsideCount = freezed,
     Object file = freezed,
+    Object imageWidth = freezed,
+    Object imageHeight = freezed,
+    Object cacheWidth = freezed,
+    Object cacheHeight = freezed,
   }) {
     return _then(_value.copyWith(
       fileEntityType: fileEntityType == freezed
@@ -116,6 +136,12 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
           ? _value.filesInsideCount
           : filesInsideCount as int,
       file: file == freezed ? _value.file : file as File,
+      imageWidth: imageWidth == freezed ? _value.imageWidth : imageWidth as int,
+      imageHeight:
+          imageHeight == freezed ? _value.imageHeight : imageHeight as int,
+      cacheWidth: cacheWidth == freezed ? _value.cacheWidth : cacheWidth as int,
+      cacheHeight:
+          cacheHeight == freezed ? _value.cacheHeight : cacheHeight as int,
     ));
   }
 }
@@ -137,7 +163,11 @@ abstract class _$BlazeFileEntityCopyWith<$Res>
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file});
+      File file,
+      int imageWidth,
+      int imageHeight,
+      int cacheWidth,
+      int cacheHeight});
 }
 
 class __$BlazeFileEntityCopyWithImpl<$Res>
@@ -163,6 +193,10 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
     Object category = freezed,
     Object filesInsideCount = freezed,
     Object file = freezed,
+    Object imageWidth = freezed,
+    Object imageHeight = freezed,
+    Object cacheWidth = freezed,
+    Object cacheHeight = freezed,
   }) {
     return _then(_BlazeFileEntity(
       fileEntityType: fileEntityType == freezed
@@ -181,6 +215,12 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
           ? _value.filesInsideCount
           : filesInsideCount as int,
       file: file == freezed ? _value.file : file as File,
+      imageWidth: imageWidth == freezed ? _value.imageWidth : imageWidth as int,
+      imageHeight:
+          imageHeight == freezed ? _value.imageHeight : imageHeight as int,
+      cacheWidth: cacheWidth == freezed ? _value.cacheWidth : cacheWidth as int,
+      cacheHeight:
+          cacheHeight == freezed ? _value.cacheHeight : cacheHeight as int,
     ));
   }
 }
@@ -199,7 +239,11 @@ class _$_BlazeFileEntity
       this.timestamp,
       this.category,
       this.filesInsideCount,
-      this.file});
+      this.file,
+      this.imageWidth,
+      this.imageHeight,
+      this.cacheWidth,
+      this.cacheHeight});
 
   @override
   final FileEntityType fileEntityType;
@@ -223,10 +267,18 @@ class _$_BlazeFileEntity
   final int filesInsideCount;
   @override
   final File file;
+  @override
+  final int imageWidth;
+  @override
+  final int imageHeight;
+  @override
+  final int cacheWidth;
+  @override
+  final int cacheHeight;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BlazeFileEntity(fileEntityType: $fileEntityType, path: $path, basename: $basename, extension: $extension, name: $name, mime: $mime, size: $size, timestamp: $timestamp, category: $category, filesInsideCount: $filesInsideCount, file: $file)';
+    return 'BlazeFileEntity(fileEntityType: $fileEntityType, path: $path, basename: $basename, extension: $extension, name: $name, mime: $mime, size: $size, timestamp: $timestamp, category: $category, filesInsideCount: $filesInsideCount, file: $file, imageWidth: $imageWidth, imageHeight: $imageHeight, cacheWidth: $cacheWidth, cacheHeight: $cacheHeight)';
   }
 
   @override
@@ -244,7 +296,11 @@ class _$_BlazeFileEntity
       ..add(DiagnosticsProperty('timestamp', timestamp))
       ..add(DiagnosticsProperty('category', category))
       ..add(DiagnosticsProperty('filesInsideCount', filesInsideCount))
-      ..add(DiagnosticsProperty('file', file));
+      ..add(DiagnosticsProperty('file', file))
+      ..add(DiagnosticsProperty('imageWidth', imageWidth))
+      ..add(DiagnosticsProperty('imageHeight', imageHeight))
+      ..add(DiagnosticsProperty('cacheWidth', cacheWidth))
+      ..add(DiagnosticsProperty('cacheHeight', cacheHeight));
   }
 
   @override
@@ -278,7 +334,19 @@ class _$_BlazeFileEntity
                 const DeepCollectionEquality()
                     .equals(other.filesInsideCount, filesInsideCount)) &&
             (identical(other.file, file) ||
-                const DeepCollectionEquality().equals(other.file, file)));
+                const DeepCollectionEquality().equals(other.file, file)) &&
+            (identical(other.imageWidth, imageWidth) ||
+                const DeepCollectionEquality()
+                    .equals(other.imageWidth, imageWidth)) &&
+            (identical(other.imageHeight, imageHeight) ||
+                const DeepCollectionEquality()
+                    .equals(other.imageHeight, imageHeight)) &&
+            (identical(other.cacheWidth, cacheWidth) ||
+                const DeepCollectionEquality()
+                    .equals(other.cacheWidth, cacheWidth)) &&
+            (identical(other.cacheHeight, cacheHeight) ||
+                const DeepCollectionEquality()
+                    .equals(other.cacheHeight, cacheHeight)));
   }
 
   @override
@@ -294,7 +362,11 @@ class _$_BlazeFileEntity
       const DeepCollectionEquality().hash(timestamp) ^
       const DeepCollectionEquality().hash(category) ^
       const DeepCollectionEquality().hash(filesInsideCount) ^
-      const DeepCollectionEquality().hash(file);
+      const DeepCollectionEquality().hash(file) ^
+      const DeepCollectionEquality().hash(imageWidth) ^
+      const DeepCollectionEquality().hash(imageHeight) ^
+      const DeepCollectionEquality().hash(cacheWidth) ^
+      const DeepCollectionEquality().hash(cacheHeight);
 
   @override
   _$BlazeFileEntityCopyWith<_BlazeFileEntity> get copyWith =>
@@ -313,7 +385,11 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file}) = _$_BlazeFileEntity;
+      File file,
+      int imageWidth,
+      int imageHeight,
+      int cacheWidth,
+      int cacheHeight}) = _$_BlazeFileEntity;
 
   @override
   FileEntityType get fileEntityType;
@@ -337,6 +413,14 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
   int get filesInsideCount;
   @override
   File get file;
+  @override
+  int get imageWidth;
+  @override
+  int get imageHeight;
+  @override
+  int get cacheWidth;
+  @override
+  int get cacheHeight;
   @override
   _$BlazeFileEntityCopyWith<_BlazeFileEntity> get copyWith;
 }

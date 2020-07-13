@@ -8,6 +8,7 @@ import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:flutter/services.dart';
+import 'package:image_size_getter/image_size_getter.dart';
 import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:path/path.dart';
@@ -53,6 +54,14 @@ class FileUtils {
   static Future<BlazeFileEntity> getBlazeEntity(
       FileSystemEntity fileSystemEntity) async {
     if (fileSystemEntity is File) {
+      var category = FileUIUtils.sortCategory(fileSystemEntity.path);
+      var isImage = category == FileCategory.Image ? true : false;
+      var height =
+          isImage ? ImageSizGetter.getSize(fileSystemEntity).height : 0;
+      var width = isImage ? ImageSizGetter.getSize(fileSystemEntity).width : 0;
+
+      var isHighSize = height > 800 || width > 800 ? true : false;
+      var cacheRatio = isHighSize ? 0.2 : .7;
       return BlazeFileEntity(
         fileEntityType: FileEntityType.File,
         path: fileSystemEntity.path,
@@ -62,8 +71,12 @@ class FileUtils {
         mime: mime(fileSystemEntity.path),
         size: FileUtils.formatBytes(await fileSystemEntity.length(), 2),
         timestamp: (await fileSystemEntity.lastAccessed()).toIso8601String(),
-        category: FileUIUtils.sortCategory(fileSystemEntity.path),
+        category: category,
         file: fileSystemEntity,
+        imageHeight: height,
+        imageWidth: width,
+        cacheHeight: (height * cacheRatio).floor(),
+        cacheWidth: (width * cacheRatio).floor(),
       );
     } else {
       var dir = Directory(fileSystemEntity.path);
@@ -79,7 +92,8 @@ class FileUtils {
   }
 
   static bool isHidden(FileSystemEntity file) {
-    if (getExactDirectory(file.path).toLowerCase().contains("whatsapp images")) return false;
+    if (getExactDirectory(file.path).toLowerCase().contains("whatsapp images"))
+      return false;
 
     if (basename(file.path).startsWith(".") ||
         file.path.contains("/.") ||
