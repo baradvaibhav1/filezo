@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:fileexplorer/enums/file_categories.dart';
 import 'package:fileexplorer/enums/view_states.dart';
 import 'package:fileexplorer/models/blaze_block.dart';
+import 'package:fileexplorer/models/blaze_category.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
@@ -20,13 +21,15 @@ class BaseProvider extends ChangeNotifier {
 
   List<BlazeFileEntity> recentFiles = List();
 
-  List<BlazeBlock> audioList = [];
-  List<BlazeBlock> imagesList = [];
-  List<BlazeBlock> videosList = [];
-  List<BlazeBlock> apksList = [];
-  List<BlazeBlock> archivesList = [];
-  List<BlazeBlock> docsList = [];
-  List<BlazeBlock> unknownList = [];
+  List<BlazeCategory> categories = [
+    BlazeCategory(FileCategory.Audio),
+    BlazeCategory(FileCategory.Image),
+    BlazeCategory(FileCategory.Video),
+    BlazeCategory(FileCategory.APK),
+    BlazeCategory(FileCategory.Archive),
+    BlazeCategory(FileCategory.Doc),
+    BlazeCategory(FileCategory.Unknown),
+  ];
 
   List<BlazeFileEntity> downloadsList = [];
   List<BlazeFileEntity> screenshotsList = [];
@@ -52,14 +55,15 @@ class BaseProvider extends ChangeNotifier {
     await getAllFiles(storageVolumes: storageVolumePaths);
     print("Files & Folders : ${allFileEntities.length}");
     print("Files Only : ${allFiles.length}");
-    print("Images Count : ${imagesList.length}");
-    print("Docs Count : ${docsList.length}");
-    print("Unknown Count : ${unknownList.length}");
+    print("Images Count : ${getBlazeCategory(FileCategory.Image).dateWiseList.length}");
+    print("Docs Count : ${getBlazeCategory(FileCategory.Doc).filesCount}");
+    print(
+        "Unknown Count : ${getBlazeCategory(FileCategory.Unknown).filesCount}");
     print("Recognizedd Count : ${recognizedList.length}");
     await sortFiles();
     print("Sorting Done");
     await getRecentFiles();
-    print(recentFiles);
+    //print(recentFiles);
     initLoadingComplete = true;
     setLoading(ViewState.Free);
     notifyListeners();
@@ -113,8 +117,7 @@ class BaseProvider extends ChangeNotifier {
         allFileEntities.add(blazeFileEntity);
         allFiles.add(blazeFileEntity);
 
-
-        await blockifyImage(blazeFileEntity);
+        await blockifyBlaze(blazeFileEntity);
       }
     });
 
@@ -142,26 +145,40 @@ class BaseProvider extends ChangeNotifier {
   }
 
   Future sortFiles() async {
-    await audioList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    audioList = await audioList.reversed.toList();
+    for (var i in categories) await i.sortFiles();
 
-    await imagesList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    imagesList = await imagesList.reversed.toList();
+    await recognizedList.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return;
+  }
 
-    await docsList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    docsList = await docsList.reversed.toList();
+  Future blockifyBlaze(BlazeFileEntity file) async {
+    var type = file.category;
 
-    await videosList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    videosList = await videosList.reversed.toList();
+    if (type != FileCategory.Unknown) recognizedList.add(file);
 
-    await apksList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    apksList = await apksList.reversed.toList();
+    var dirName = FileUtils.getExactDirectory(file.path);
 
-    await archivesList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    archivesList = await archivesList.reversed.toList();
+    var blazeCategory = getBlazeCategory(type);
 
-    await recognizedList.sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    recognizedList = await recognizedList.reversed.toList();
+    var block = blazeCategory.blockList
+        .firstWhere((element) => element.name == dirName, orElse: () {
+      var newBlock = new BlazeBlock(dirName);
+      blazeCategory.blockList.add(newBlock);
+      return newBlock;
+    });
+
+    await blazeCategory.addFile(file);
+    await block.addFile(file);
+
+    var dateDirName = getBlockNameFromDate(file.timestamp);
+    var dateBlock = blazeCategory.dateWiseList
+        .firstWhere((element) => element.name == dateDirName, orElse: () {
+      var newBlock = new BlazeBlock(dateDirName);
+      blazeCategory.dateWiseList.add(newBlock);
+      return newBlock;
+    });
+
+    await dateBlock.addFile(file);
 
     return;
   }
@@ -175,49 +192,20 @@ class BaseProvider extends ChangeNotifier {
             : recognizedList.length));
   }
 
-  Future blockifyImage(BlazeFileEntity file) async {
-    var type = file.category;
-
-    if (type != FileCategory.Unknown) recognizedList.add(file);
-
-
-    var dirName = FileUtils.getExactDirectory(file.path);
-    List<BlazeBlock> blockList;
-
-    switch (type) {
-      case FileCategory.Image:
-        blockList = imagesList;
-        break;
-      case FileCategory.Audio:
-        blockList = audioList;
-        break;
-      case FileCategory.Doc:
-        blockList = docsList;
-        break;
-      case FileCategory.Video:
-        blockList = videosList;
-        break;
-      case FileCategory.Archive:
-        blockList = archivesList;
-        break;
-      case FileCategory.APK:
-        blockList = apksList;
-        break;
-      default:
-        blockList = unknownList;
-        break;
-    }
-
-    var block =
-        blockList.firstWhere((element) => element.name == dirName, orElse: () {
-          var newBlock = new BlazeBlock(dirName);
-          blockList.add(newBlock);
-      return newBlock;
-    });
-
-    await block.addFile(file);
-
-    return;
+  BlazeCategory getBlazeCategory(FileCategory category) {
+    return categories.firstWhere((element) => element.category == category,
+        orElse: () {});
   }
 
+  String getBlockNameFromDate(String iso)
+  {
+    String formattedTime = FileUtils.formatTime(iso);
+
+    if(formattedTime.contains("Today"))
+      return "Today";
+    else if(formattedTime.contains("Yesterday"))
+      return "Yesterday";
+    else
+      return formattedTime.substring(0,9);
+  }
 }

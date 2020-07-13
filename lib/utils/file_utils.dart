@@ -63,7 +63,7 @@ class FileUtils {
         size: FileUtils.formatBytes(await fileSystemEntity.length(), 2),
         timestamp: (await fileSystemEntity.lastAccessed()).toIso8601String(),
         category: FileUIUtils.sortCategory(fileSystemEntity.path),
-        file : fileSystemEntity,
+        file: fileSystemEntity,
       );
     } else {
       var dir = Directory(fileSystemEntity.path);
@@ -79,10 +79,13 @@ class FileUtils {
   }
 
   static bool isHidden(FileSystemEntity file) {
+    if (getExactDirectory(file.path).toLowerCase().contains("whatsapp images")) return false;
+
     if (basename(file.path).startsWith(".") ||
         file.path.contains("/.") ||
         (file.path.contains("/Android")) ||
-        file.path.toLowerCase().contains("/private")) return true;
+        file.path.toLowerCase().contains("/private") ||
+        (file.path.toLowerCase().contains("whatsapp"))) return true;
 
     return false;
   }
@@ -326,9 +329,8 @@ class FileUtils {
     }
   }
 
-
-  static String getExactDirectory(String path){
+  static String getExactDirectory(String path) {
     var pathArr = dirname(path).split('/');
-    return pathArr[pathArr.length-1];
+    return pathArr[pathArr.length - 1];
   }
 }

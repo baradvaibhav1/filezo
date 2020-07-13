@@ -62,7 +62,6 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIOverlays([]);
     startTimeout();
   }
 

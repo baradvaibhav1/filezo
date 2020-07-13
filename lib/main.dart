@@ -28,7 +28,7 @@ class CustomImageCache extends WidgetsFlutterBinding {
   ImageCache createImageCache() {
     ImageCache imageCache = super.createImageCache();
     // Set your image cache size
-    imageCache.maximumSizeBytes = 1024 * 1024 * 512; // 100 MB
+    imageCache.maximumSizeBytes = 1024 * 1024 * 500; // 100 MB
     return imageCache;
   }
 }
@@ -38,13 +38,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Blaze File Explorer',
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xffFAFAFA),
         toggleableActiveColor: const Color(0xff06BD46),
         appBarTheme: AppBarTheme(
+
           brightness: Brightness.light,
           color: Colors.white,
           iconTheme: IconThemeData(
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
           actionsIconTheme: IconThemeData(
             color: const Color(0xff293B63),
           ),
-          elevation: 0,
+          elevation: 1,
         ),
         iconTheme: IconThemeData(color: const Color(0xff293B63)),
         dividerTheme: DividerThemeData(

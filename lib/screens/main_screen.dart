@@ -1,3 +1,4 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fileexplorer/fragments/favorites_fragment.dart';
 import 'package:fileexplorer/fragments/home_fragment.dart';
 import 'package:fileexplorer/fragments/settings_fragment.dart';
@@ -81,30 +82,28 @@ class _MainScreenState extends State<MainScreen> {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               IconButton(
-                icon: Icon(FlutterIcons.home_faw),
+                icon: Icon(Feather.home),
                 onPressed: () {},
                 iconSize: 24,
               ),
               IconButton(
-                icon: Icon(FlutterIcons.game_controller_ent),
+                icon: Icon(Feather.heart),
                 onPressed: () {},
                 iconSize: 24,
               ),
               Visibility(
                 visible: false,
-                child: IconButton(
-                  icon: Icon(FlutterIcons.folder_faw5),
-                  onPressed: () {},
-                  iconSize: 24,
+                child: SizedBox(
+                  width: 36,
                 ),
               ),
               IconButton(
-                icon: Icon(FlutterIcons.folder_faw5),
+                icon: Icon(Feather.trash),
                 onPressed: () {},
                 iconSize: 24,
               ),
               IconButton(
-                icon: Icon(FlutterIcons.settings_fea),
+                icon: Icon(Feather.settings),
                 onPressed: () {},
                 iconSize: 24,
               ),

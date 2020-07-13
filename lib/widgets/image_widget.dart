@@ -12,31 +12,37 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      borderRadius: BorderRadius.circular(4),
-      clipBehavior: Clip.antiAlias,
-      child: GridTile(
-        footer: Container(
-          height: 72,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.transparent,
-                Colors.black54,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+    return Hero(
+      tag: file.path,
+      child: Material(
+        type: MaterialType.transparency,
+        borderRadius: BorderRadius.circular(4),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap ,
+          child: GridTile(
+            footer: Container(
+              height: 32,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.black12,
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
             ),
-          ),
-        ),
-        child: FadeInImage(
-          fadeInDuration: const Duration(milliseconds: 300),
-          fadeOutDuration: const Duration(milliseconds: 300),
-          fit: BoxFit.cover,
-          placeholder: MemoryImage(FileUtils.placeHolder),
-          image: FileImage(
-            File(file.path),
-            scale: 0.1,
+            child: FadeInImage(
+              fadeInDuration: const Duration(milliseconds: 300),
+              fadeOutDuration: const Duration(milliseconds: 300),
+              fit: BoxFit.cover,
+              placeholder: MemoryImage(FileUtils.placeHolder),
+              image: FileImage(
+                file.file,
+              ),
+            ),
           ),
         ),
       ),

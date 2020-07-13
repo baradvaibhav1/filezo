@@ -5,17 +5,19 @@ import 'package:flutter/material.dart';
 class CategoryButton extends StatelessWidget {
   final double size;
   final CategoryItemData data;
+  final onTap;
 
   CategoryButton({
     this.size = 64,
     this.data,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {},
+      onTap: onTap,
       child: SizedBox(
         width: size*1.16,
         child: Column(
