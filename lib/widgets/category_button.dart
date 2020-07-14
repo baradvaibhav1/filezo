@@ -19,7 +19,7 @@ class CategoryButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: SizedBox(
-        width: size*1.16,
+        width: size * 1.16,
         child: Column(
           children: <Widget>[
             Container(
@@ -48,7 +48,7 @@ class CategoryButton extends StatelessWidget {
             ),
             StyledText(
               data.text,
-              fontSize: size /5.8,
+              fontSize: size / 5.8,
               textAlign: TextAlign.center,
               textOverflow: TextOverflow.ellipsis,
               maxLines: 1,
