@@ -42,7 +42,7 @@ class BaseProvider extends ChangeNotifier {
     //checkSpace();
   }
 
-  checkSpace() async {
+  initializeBlaze() async {
     setLoading(ViewState.BackgroundLoading);
     await FileUtils.loadPlaceHolder();
     print("Placeholder Loaded");
@@ -78,13 +78,17 @@ class BaseProvider extends ChangeNotifier {
 
     if (l.length > 1) {
       var freeSD = await platform.invokeMethod("getExternalStorageFreeSpace");
-      var totalSD = await platform.invokeMethod("getExternalStorageTotalSpace");
+      var totalSD = await pla
+      tform.invokeMethod("getExternalStorageTotalSpace");
       setFreeSDSpace(freeSD);
       setTotalSDSpace(totalSD);
       setUsedSDSpace(totalSD - freeSD);
     }*/
     //getRecentFiles();
   }
+
+
+
 
   categorizeFile(BlazeFileEntity file) async {
     var type = file.category;

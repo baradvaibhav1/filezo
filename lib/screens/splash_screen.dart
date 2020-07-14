@@ -43,7 +43,7 @@ class _SplashState extends State<Splash> {
             ),
           );
           Timer(Duration(seconds: 1), () {
-            Provider.of<BaseProvider>(context, listen: false).checkSpace();
+            Provider.of<BaseProvider>(context, listen: false).initializeBlaze();
           });
         }
       });
@@ -55,7 +55,7 @@ class _SplashState extends State<Splash> {
           child: MainScreen(),
         ),
       );
-      Provider.of<BaseProvider>(context, listen: false).checkSpace();
+      Provider.of<BaseProvider>(context, listen: false).initializeBlaze();
     }
   }
 
