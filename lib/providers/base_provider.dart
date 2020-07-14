@@ -9,6 +9,7 @@ import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 
 class BaseProvider extends ChangeNotifier {
@@ -38,6 +39,8 @@ class BaseProvider extends ChangeNotifier {
   ViewState viewState = ViewState.Free;
   bool initLoadingComplete = false;
 
+  MethodChannel platform = MethodChannel('com.catalyst06.blaze/storage');
+
   BaseProvider() {
     //checkSpace();
   }
@@ -51,7 +54,8 @@ class BaseProvider extends ChangeNotifier {
     storageBoxes.clear();
     storageVolumePaths = await FileUtils.getStorageList();
     print(storageVolumePaths);
-
+    var volumesString = await platform.invokeMethod("getVolumes");
+    print(volumesString);
     await getAllFiles(storageVolumes: storageVolumePaths);
     print("Files & Folders : ${allFileEntities.length}");
     print("Files Only : ${allFiles.length}");
@@ -68,7 +72,6 @@ class BaseProvider extends ChangeNotifier {
     setLoading(ViewState.Free);
     notifyListeners();
 
-    //MethodChannel platform = MethodChannel('dev.jideguru.filex/storage');
 /*
     var free = await platform.invokeMethod("getStorageFreeSpace");
     var total = await platform.invokeMethod("getStorageTotalSpace");
