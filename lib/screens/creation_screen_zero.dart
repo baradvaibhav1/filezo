@@ -68,11 +68,6 @@ class _CreationScreenZeroState extends State<CreationScreenZero> {
           ),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          BlazeItemTile(),
-        ],
-      ),
     );
   }
 }
