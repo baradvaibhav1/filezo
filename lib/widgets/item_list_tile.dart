@@ -35,13 +35,11 @@ class BlazeItemTile extends StatelessWidget {
             children: <Widget>[
               isImage
                   ? Center(
-                    child: FadeInImage(
-                        placeholder: MemoryImage(FileUtils.placeHolder),
-                        image: FileImage(
-                          File(file.path),
-                          scale: 0.1,
-                        ),
-                      ),
+                    child: Image.file(
+                      file.file,
+                      fit: BoxFit.cover,
+                      cacheWidth: 100,
+                    ),
                   )
                   : Image.asset(
                       !isFolder

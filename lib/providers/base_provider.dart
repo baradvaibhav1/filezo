@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:fileexplorer/data/storage_boxes.dart';
+import 'package:fileexplorer/enums/boxtypes.dart';
 import 'package:fileexplorer/enums/file_categories.dart';
 import 'package:fileexplorer/enums/view_states.dart';
 import 'package:fileexplorer/models/blaze_block.dart';
 import 'package:fileexplorer/models/blaze_category.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
+import 'package:fileexplorer/models/volume_info.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -16,7 +20,8 @@ class BaseProvider extends ChangeNotifier {
   static const int RECENT_FILES_MAX = 10;
 
   List<Directory> storageVolumePaths = List(); //the mounted storage volumes
-  List<StorageBoxData> storageBoxes = List();
+  List<StorageBoxData> localStorageBoxes = List();
+  List<StorageBoxData> cloudStorageBoxes = List();
   List<BlazeFileEntity> allFileEntities = List();
   List<BlazeFileEntity> allFiles = List();
 
@@ -51,15 +56,17 @@ class BaseProvider extends ChangeNotifier {
     print("Placeholder Loaded");
     recentFiles.clear();
     storageVolumePaths.clear();
-    storageBoxes.clear();
-    storageVolumePaths = await FileUtils.getStorageList();
+    localStorageBoxes.clear();
     print(storageVolumePaths);
     var volumesString = await platform.invokeMethod("getVolumes");
-    print(volumesString);
+    await loadStorageBoxes(volumesString);
+    await getVolumeDirectories();
+    print("Volume Count : ${storageVolumePaths.length}");
     await getAllFiles(storageVolumes: storageVolumePaths);
     print("Files & Folders : ${allFileEntities.length}");
     print("Files Only : ${allFiles.length}");
-    print("Images Count : ${getBlazeCategory(FileCategory.Image).dateWiseList.length}");
+    print(
+        "Images Count : ${getBlazeCategory(FileCategory.Image).dateWiseList.length}");
     print("Docs Count : ${getBlazeCategory(FileCategory.Doc).filesCount}");
     print(
         "Unknown Count : ${getBlazeCategory(FileCategory.Unknown).filesCount}");
@@ -90,9 +97,6 @@ class BaseProvider extends ChangeNotifier {
     //getRecentFiles();
   }
 
-
-
-
   categorizeFile(BlazeFileEntity file) async {
     var type = file.category;
 
@@ -112,21 +116,25 @@ class BaseProvider extends ChangeNotifier {
 
     var dir = storageVolume;
 
-    await dir
-        .list(recursive: true)
-        .where((file) => !FileUtils.isHidden(file))
-        .forEach((f) async {
-      var blazeFileEntity = await FileUtils.getBlazeEntity(f);
+    try {
+      await dir
+          .list(recursive: true)
+          .where((file) => !FileUtils.isHidden(file))
+          .forEach((f) async {
+        var blazeFileEntity = await FileUtils.getBlazeEntity(f);
 
-      if (FileUtils.isBlazeFolder(blazeFileEntity)) {
-        allFileEntities.add(blazeFileEntity);
-      } else {
-        allFileEntities.add(blazeFileEntity);
-        allFiles.add(blazeFileEntity);
+        if (FileUtils.isBlazeFolder(blazeFileEntity)) {
+          allFileEntities.add(blazeFileEntity);
+        } else {
+          allFileEntities.add(blazeFileEntity);
+          allFiles.add(blazeFileEntity);
 
-        await blockifyBlaze(blazeFileEntity);
-      }
-    });
+          await blockifyBlaze(blazeFileEntity);
+        }
+      });
+    } on Exception catch (e) {
+      print("Error Handling Volume");
+    }
 
     return;
   }
@@ -204,15 +212,61 @@ class BaseProvider extends ChangeNotifier {
         orElse: () {});
   }
 
-  String getBlockNameFromDate(String iso)
-  {
+  String getBlockNameFromDate(String iso) {
     String formattedTime = FileUtils.formatTime(iso);
 
-    if(formattedTime.contains("Today"))
+    if (formattedTime.contains("Today"))
       return "Today";
-    else if(formattedTime.contains("Yesterday"))
+    else if (formattedTime.contains("Yesterday"))
       return "Yesterday";
     else
-      return formattedTime.substring(0,9);
+      return formattedTime.substring(0, 9);
+  }
+
+  loadStorageBoxes(String volumesString) async {
+    var volumeList = jsonDecode(volumesString) as List;
+    List<VolumeInfo> volInfoList =
+        volumeList.map((volJson) => VolumeInfo.fromJson(volJson)).toList();
+
+    volInfoList.forEach((it) {
+      localStorageBoxes.add(VolumeInfo.getStorageBox(it));
+    });
+  }
+
+  getVolumeDirectories() async {
+    localStorageBoxes.forEach((element) {
+      try {
+        var dir = Directory(element.path);
+        storageVolumePaths.add(dir);
+      } on Exception catch (e) {
+        print("Failed to read Volume");
+      }
+    });
+  }
+
+  getStorageBoxFromPath(String path) {
+    return localStorageBoxes
+        .firstWhere((element) => path.contains(element.path), orElse: () {
+      return null;
+    });
+  }
+
+  getPrimaryStorage() {
+    return localStorageBoxes
+        .firstWhere((element) => element.boxType==BoxType.InternalStorage, orElse: () {
+      return null;
+    });
+  }
+
+  setLoadingNoNotif() {
+    viewState = ViewState.Loading;
+  }
+
+  cancelLoadingNoNotif() {
+    viewState = ViewState.Free;
+  }
+
+  isFree() {
+    return viewState == ViewState.Free ? true : false;
   }
 }

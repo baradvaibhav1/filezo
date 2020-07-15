@@ -1,11 +1,14 @@
+import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/widgets/custom_space_box_h.dart';
 import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class StorageBoxBrowser extends StatelessWidget {
-  const StorageBoxBrowser({
-    Key key,
+class StorageBoxBrowser extends StatelessWidget with PreferredSizeWidget{
+  final StorageBoxData storageBox;
+
+  StorageBoxBrowser({
+    Key key, this.storageBox,
   }) : super(key: key);
 
   @override
@@ -14,14 +17,14 @@ class StorageBoxBrowser extends StatelessWidget {
       child: InkWell(
         onTap: () {},
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.fromLTRB(16, 20, 20, 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Row(
                 children: <Widget>[
                   StyledText(
-                    'Storage',
+                    storageBox.boxName,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     alignment: Alignment.centerLeft,
@@ -49,14 +52,14 @@ class StorageBoxBrowser extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   StyledText(
-                    '30.5 GB',
+                    storageBox.usedLabel,
                     alignment: Alignment.center,
                     textColor: Colors.grey[700],
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
                   ),
                   StyledText(
-                    '128 GB',
+                    storageBox.totalLabel,
                     alignment: Alignment.center,
                     textColor: Colors.grey[700],
                     fontSize: 12,
@@ -70,4 +73,8 @@ class StorageBoxBrowser extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => new Size.fromHeight(kToolbarHeight);
 }

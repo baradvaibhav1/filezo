@@ -1,6 +1,4 @@
-import 'dart:io';
 
-import 'package:extended_image/extended_image.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +36,7 @@ class ImageWidget extends StatelessWidget {
             child: Image.file(
               file.file,
               fit: BoxFit.cover,
-              cacheHeight: file.cacheHeight,
-              cacheWidth: file.cacheWidth,
+              cacheWidth: 200,
             ),
           ),
         ),

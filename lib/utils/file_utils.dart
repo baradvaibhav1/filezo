@@ -8,6 +8,7 @@ import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
@@ -56,12 +57,12 @@ class FileUtils {
     if (fileSystemEntity is File) {
       var category = FileUIUtils.sortCategory(fileSystemEntity.path);
       var isImage = category == FileCategory.Image ? true : false;
+      /*var properties = isImage ? ImageSizGetter.getSize(fileSystemEntity) : null;
       var height =
-          isImage ? ImageSizGetter.getSize(fileSystemEntity).height : 0;
-      var width = isImage ? ImageSizGetter.getSize(fileSystemEntity).width : 0;
-
-      var isHighSize = height > 800 || width > 800 ? true : false;
-      var cacheRatio = isHighSize ? 0.2 : .7;
+          isImage ? properties.height : 0;
+      var width = isImage ? properties.width : 0;
+      var isHighSize = height > 700 || width > 700 ? true : false;
+      var cacheRatio = isHighSize ? 0.2 : .5;*/
       return BlazeFileEntity(
         fileEntityType: FileEntityType.File,
         path: fileSystemEntity.path,
@@ -73,10 +74,10 @@ class FileUtils {
         timestamp: (await fileSystemEntity.lastAccessed()).toIso8601String(),
         category: category,
         file: fileSystemEntity,
-        imageHeight: height,
+        /*imageHeight: height,
         imageWidth: width,
         cacheHeight: (height * cacheRatio).floor(),
-        cacheWidth: (width * cacheRatio).floor(),
+        cacheWidth: (width * cacheRatio).floor(),*/
       );
     } else {
       var dir = Directory(fileSystemEntity.path);

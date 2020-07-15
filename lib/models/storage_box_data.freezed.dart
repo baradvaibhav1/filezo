@@ -15,7 +15,9 @@ class _$StorageBoxDataTearOff {
   _StorageBoxData call(
       {BoxType boxType,
       String boxName,
+      String path,
       double percentFull = 0.5,
+      String freeLabel = '∞',
       String usedLabel = '∞',
       String totalLabel = '∞',
       Color color,
@@ -23,7 +25,9 @@ class _$StorageBoxDataTearOff {
     return _StorageBoxData(
       boxType: boxType,
       boxName: boxName,
+      path: path,
       percentFull: percentFull,
+      freeLabel: freeLabel,
       usedLabel: usedLabel,
       totalLabel: totalLabel,
       color: color,
@@ -38,7 +42,9 @@ const $StorageBoxData = _$StorageBoxDataTearOff();
 mixin _$StorageBoxData {
   BoxType get boxType;
   String get boxName;
+  String get path;
   double get percentFull;
+  String get freeLabel;
   String get usedLabel;
   String get totalLabel;
   Color get color;
@@ -54,7 +60,9 @@ abstract class $StorageBoxDataCopyWith<$Res> {
   $Res call(
       {BoxType boxType,
       String boxName,
+      String path,
       double percentFull,
+      String freeLabel,
       String usedLabel,
       String totalLabel,
       Color color,
@@ -73,7 +81,9 @@ class _$StorageBoxDataCopyWithImpl<$Res>
   $Res call({
     Object boxType = freezed,
     Object boxName = freezed,
+    Object path = freezed,
     Object percentFull = freezed,
+    Object freeLabel = freezed,
     Object usedLabel = freezed,
     Object totalLabel = freezed,
     Object color = freezed,
@@ -82,8 +92,10 @@ class _$StorageBoxDataCopyWithImpl<$Res>
     return _then(_value.copyWith(
       boxType: boxType == freezed ? _value.boxType : boxType as BoxType,
       boxName: boxName == freezed ? _value.boxName : boxName as String,
+      path: path == freezed ? _value.path : path as String,
       percentFull:
           percentFull == freezed ? _value.percentFull : percentFull as double,
+      freeLabel: freeLabel == freezed ? _value.freeLabel : freeLabel as String,
       usedLabel: usedLabel == freezed ? _value.usedLabel : usedLabel as String,
       totalLabel:
           totalLabel == freezed ? _value.totalLabel : totalLabel as String,
@@ -102,7 +114,9 @@ abstract class _$StorageBoxDataCopyWith<$Res>
   $Res call(
       {BoxType boxType,
       String boxName,
+      String path,
       double percentFull,
+      String freeLabel,
       String usedLabel,
       String totalLabel,
       Color color,
@@ -123,7 +137,9 @@ class __$StorageBoxDataCopyWithImpl<$Res>
   $Res call({
     Object boxType = freezed,
     Object boxName = freezed,
+    Object path = freezed,
     Object percentFull = freezed,
+    Object freeLabel = freezed,
     Object usedLabel = freezed,
     Object totalLabel = freezed,
     Object color = freezed,
@@ -132,8 +148,10 @@ class __$StorageBoxDataCopyWithImpl<$Res>
     return _then(_StorageBoxData(
       boxType: boxType == freezed ? _value.boxType : boxType as BoxType,
       boxName: boxName == freezed ? _value.boxName : boxName as String,
+      path: path == freezed ? _value.path : path as String,
       percentFull:
           percentFull == freezed ? _value.percentFull : percentFull as double,
+      freeLabel: freeLabel == freezed ? _value.freeLabel : freeLabel as String,
       usedLabel: usedLabel == freezed ? _value.usedLabel : usedLabel as String,
       totalLabel:
           totalLabel == freezed ? _value.totalLabel : totalLabel as String,
@@ -149,12 +167,15 @@ class _$_StorageBoxData
   const _$_StorageBoxData(
       {this.boxType,
       this.boxName,
+      this.path,
       this.percentFull = 0.5,
+      this.freeLabel = '∞',
       this.usedLabel = '∞',
       this.totalLabel = '∞',
       this.color,
       this.imgPath})
       : assert(percentFull != null),
+        assert(freeLabel != null),
         assert(usedLabel != null),
         assert(totalLabel != null);
 
@@ -162,9 +183,14 @@ class _$_StorageBoxData
   final BoxType boxType;
   @override
   final String boxName;
+  @override
+  final String path;
   @JsonKey(defaultValue: 0.5)
   @override
   final double percentFull;
+  @JsonKey(defaultValue: '∞')
+  @override
+  final String freeLabel;
   @JsonKey(defaultValue: '∞')
   @override
   final String usedLabel;
@@ -178,7 +204,7 @@ class _$_StorageBoxData
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'StorageBoxData(boxType: $boxType, boxName: $boxName, percentFull: $percentFull, usedLabel: $usedLabel, totalLabel: $totalLabel, color: $color, imgPath: $imgPath)';
+    return 'StorageBoxData(boxType: $boxType, boxName: $boxName, path: $path, percentFull: $percentFull, freeLabel: $freeLabel, usedLabel: $usedLabel, totalLabel: $totalLabel, color: $color, imgPath: $imgPath)';
   }
 
   @override
@@ -188,7 +214,9 @@ class _$_StorageBoxData
       ..add(DiagnosticsProperty('type', 'StorageBoxData'))
       ..add(DiagnosticsProperty('boxType', boxType))
       ..add(DiagnosticsProperty('boxName', boxName))
+      ..add(DiagnosticsProperty('path', path))
       ..add(DiagnosticsProperty('percentFull', percentFull))
+      ..add(DiagnosticsProperty('freeLabel', freeLabel))
       ..add(DiagnosticsProperty('usedLabel', usedLabel))
       ..add(DiagnosticsProperty('totalLabel', totalLabel))
       ..add(DiagnosticsProperty('color', color))
@@ -205,9 +233,14 @@ class _$_StorageBoxData
             (identical(other.boxName, boxName) ||
                 const DeepCollectionEquality()
                     .equals(other.boxName, boxName)) &&
+            (identical(other.path, path) ||
+                const DeepCollectionEquality().equals(other.path, path)) &&
             (identical(other.percentFull, percentFull) ||
                 const DeepCollectionEquality()
                     .equals(other.percentFull, percentFull)) &&
+            (identical(other.freeLabel, freeLabel) ||
+                const DeepCollectionEquality()
+                    .equals(other.freeLabel, freeLabel)) &&
             (identical(other.usedLabel, usedLabel) ||
                 const DeepCollectionEquality()
                     .equals(other.usedLabel, usedLabel)) &&
@@ -225,7 +258,9 @@ class _$_StorageBoxData
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(boxType) ^
       const DeepCollectionEquality().hash(boxName) ^
+      const DeepCollectionEquality().hash(path) ^
       const DeepCollectionEquality().hash(percentFull) ^
+      const DeepCollectionEquality().hash(freeLabel) ^
       const DeepCollectionEquality().hash(usedLabel) ^
       const DeepCollectionEquality().hash(totalLabel) ^
       const DeepCollectionEquality().hash(color) ^
@@ -240,7 +275,9 @@ abstract class _StorageBoxData implements StorageBoxData {
   const factory _StorageBoxData(
       {BoxType boxType,
       String boxName,
+      String path,
       double percentFull,
+      String freeLabel,
       String usedLabel,
       String totalLabel,
       Color color,
@@ -251,7 +288,11 @@ abstract class _StorageBoxData implements StorageBoxData {
   @override
   String get boxName;
   @override
+  String get path;
+  @override
   double get percentFull;
+  @override
+  String get freeLabel;
   @override
   String get usedLabel;
   @override

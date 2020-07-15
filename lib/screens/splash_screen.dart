@@ -27,6 +27,12 @@ class _SplashState extends State<Splash> {
   }
 
   changeScreen() async {
+
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
     PermissionStatus permission = await Permission.storage.status;
 
     if (permission != PermissionStatus.granted) {

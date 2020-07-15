@@ -1,4 +1,5 @@
 import 'package:fileexplorer/providers/base_provider.dart';
+import 'package:fileexplorer/providers/folder_provider.dart';
 import 'package:fileexplorer/screens/creation_screen.dart';
 import 'package:fileexplorer/screens/creation_screen_zero.dart';
 import 'package:fileexplorer/screens/main_screen.dart';
@@ -16,6 +17,10 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => BaseProvider()),
+        ChangeNotifierProxyProvider<BaseProvider, FolderProvider>(
+          create: (_) => FolderProvider(),
+          update: (_, baseProvider, folderProvider) => folderProvider..rebaseInit(baseProvider),
+        ),
       ],
       child: MyApp(),
     ),

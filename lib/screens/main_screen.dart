@@ -4,6 +4,7 @@ import 'package:fileexplorer/fragments/home_fragment.dart';
 import 'package:fileexplorer/fragments/settings_fragment.dart';
 import 'package:fileexplorer/fragments/trash_fragment.dart';
 import 'package:fileexplorer/providers/base_provider.dart';
+import 'package:fileexplorer/providers/folder_provider.dart';
 import 'package:fileexplorer/widgets/share_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -26,7 +27,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     this._currentIndex = 0;
-
+    FolderProvider folderProvider =
+    Provider.of<FolderProvider>(context, listen: false);
     super.initState();
 
   }
@@ -69,6 +71,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    BaseProvider baseProvider =
+    Provider.of<BaseProvider>(context, listen: false);
+
+
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: ShareButton(
