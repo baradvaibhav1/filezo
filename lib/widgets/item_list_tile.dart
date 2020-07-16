@@ -35,18 +35,19 @@ class BlazeItemTile extends StatelessWidget {
             children: <Widget>[
               isImage
                   ? Center(
-                    child: Image.file(
-                      file.file,
-                      fit: BoxFit.cover,
-                      cacheWidth: 100,
-                    ),
-                  )
+                      child: Image.file(
+                        file.file,
+                        fit: BoxFit.cover,
+                        cacheWidth: 100,
+                      ),
+                    )
                   : Image.asset(
                       !isFolder
                           ? FileUIUtils.getFileIconFromCategory(file.category)
                           : "assets/images/folder.png",
                       height: 48,
                       width: 48,
+                      cacheWidth: 48,
                     ),
               StyledText(
                 !isFolder && !isImage ? file.extension : "",
@@ -106,7 +107,7 @@ class BlazeItemTile extends StatelessWidget {
               textColor: Colors.grey[400],
             ),
             StyledText(
-              file.size,
+              isFolder ? "${file.filesInsideCount}" : file.size,
               fontWeight: FontWeight.w300,
               fontSize: 12,
               textColor: Colors.grey[400],

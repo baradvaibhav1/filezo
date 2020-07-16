@@ -19,7 +19,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => BaseProvider()),
         ChangeNotifierProxyProvider<BaseProvider, FolderProvider>(
           create: (_) => FolderProvider(),
-          update: (_, baseProvider, folderProvider) => folderProvider..rebaseInit(baseProvider),
+          update: (_, baseProvider, folderProvider) => folderProvider..rebase(baseProvider),
         ),
       ],
       child: MyApp(),

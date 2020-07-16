@@ -8,8 +8,6 @@ import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:image_size_getter/image_size_getter.dart';
 import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:path/path.dart';
@@ -105,9 +103,16 @@ class FileUtils {
     return false;
   }
 
+  static bool isLegitHidden(FileSystemEntity file) {
+    if (basename(file.path).startsWith(".") ||
+        file.path.contains("/.") ||
+        (file.path.contains("/Android"))) return true;
+
+    return false;
+  }
+
   static bool isBlazeHidden(BlazeFileEntity file) {
     if (basename(file.path).startsWith(".")) return true;
-
     return false;
   }
 
@@ -220,6 +225,36 @@ class FileUtils {
       }
     }
 //    print(files);
+    return files;
+  }
+
+/*  static Future<List<BlazeFileEntity>> dirContents(
+      {bool showHidden = false, Directory dir, bool withDirectory = true}) {
+    var files = <BlazeFileEntity>[];
+    var completer = Completer<List<BlazeFileEntity>>();
+    var lister = dir.list(recursive: false);
+    lister.listen((file) async => files.add(await FileUtils.getBlazeEntity(file)),
+        // should also register onError
+        onDone: () => completer.complete(files));
+    return completer.future;
+  }*/
+
+  static Future<List<BlazeFileEntity>> getBlazeInPath(
+      {bool showHidden = false,
+      Directory dir,
+      bool withDirectory = true}) async {
+    var files = <BlazeFileEntity>[];
+
+    await dir
+        .list(recursive: false)
+        .where((file) => !isLegitHidden(file))
+        .forEach((f) async {
+      var blazeFileEntity = await FileUtils.getBlazeEntity(f);
+      print(blazeFileEntity.path);
+
+      await files.add(blazeFileEntity);
+    });
+
     return files;
   }
 

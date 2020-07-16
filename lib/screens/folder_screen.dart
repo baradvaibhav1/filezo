@@ -5,8 +5,13 @@ import 'package:fileexplorer/widgets/storage_box_browser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+
 class FolderScreen extends StatefulWidget {
+
+
   final String path;
+
 
   FolderScreen(this.path);
 
@@ -15,16 +20,19 @@ class FolderScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<FolderScreen> {
+
   @override
   void initState() {
+    FolderProvider folderProvider = Provider.of<FolderProvider>(context,listen: false);
+
+    changeFolder(folderProvider);
+
+    // TODO: implement initState
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     FolderProvider folderProvider = Provider.of<FolderProvider>(context);
-
-    changeFolder(folderProvider);
 
     return Scaffold(
       body: CustomScrollView(
@@ -65,8 +73,12 @@ class _FolderScreenState extends State<FolderScreen> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return BlazeItemTile();
+                return BlazeItemTile(
+                  file: folderProvider.currentBlazeList[index],
+                );
               },
+              childCount: folderProvider.currentBlazeList.length,
+
             ),
           ),
         ],
