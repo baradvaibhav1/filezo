@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fileexplorer/providers/folder_provider.dart';
 import 'package:fileexplorer/widgets/folder_view_tile.dart';
@@ -48,6 +50,7 @@ class _FolderScreenState extends State<FolderScreen> {
       },
       child: Scaffold(
         body: CustomScrollView(
+          key: ValueKey<int>(Random(DateTime.now().millisecondsSinceEpoch).nextInt(4294967296)),
           slivers: <Widget>[
             SliverAppBar(
               forceElevated: true,
@@ -85,6 +88,9 @@ class _FolderScreenState extends State<FolderScreen> {
             SliverToBoxAdapter(
               child: PathLane(
                 pathBoxList: folderProvider.pathBoxList,
+                pathTap: (path){
+                  folderProvider.goToPath(path);
+                },
               ),
             ),
             SliverList(

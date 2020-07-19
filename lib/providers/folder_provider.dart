@@ -65,8 +65,7 @@ class FolderProvider extends ChangeNotifier {
         //TODO Load Files
       }
 
-      cancelLoadingNoNotif();
-      notifyListeners();
+    cancelLoading();
     }
   }
 
@@ -97,17 +96,21 @@ class FolderProvider extends ChangeNotifier {
 
     print("Loading done");
 
-    notifyListeners();
+    cancelLoading();
   }
 
   setLoading() {
-    viewState = ViewState.Loading;
-    notifyListeners();
+    if (viewState != ViewState.Loading) {
+      viewState = ViewState.Loading;
+      notifyListeners();
+    }
   }
 
   cancelLoading() {
-    viewState = ViewState.Free;
-    notifyListeners();
+    if (viewState != ViewState.Free) {
+      viewState = ViewState.Free;
+      notifyListeners();
+    }
   }
 
   setLoadingNoNotif() {
@@ -173,6 +176,15 @@ class FolderProvider extends ChangeNotifier {
     else {
       pathBoxList.removeLast();
       updateFolderData(pathBoxList.last.path, addPath: false);
+    }
+  }
+
+  goToPath(String path) {
+    var index = pathBoxList.indexWhere((element) => element.path == path);
+
+    if (index != -1) {
+      pathBoxList.removeRange(index + 1, pathBoxList.length);
+      updateFolderData(path, addPath: false);
     }
   }
 }
