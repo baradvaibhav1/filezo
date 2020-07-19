@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fileexplorer/enums/view_states.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
+import 'package:fileexplorer/models/path_box.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
@@ -15,6 +16,7 @@ class FolderProvider extends ChangeNotifier {
   List<BlazeFileEntity> currentBlazeList = [];
   List<BlazeFileEntity> currentFolderList = [];
   List<BlazeFileEntity> currentFileList = [];
+  List<PathBox> pathBoxList = [];
   ViewState viewState = ViewState.Free;
 
   FolderProvider();
@@ -46,7 +48,7 @@ class FolderProvider extends ChangeNotifier {
     // notifyListeners();
   }
 
-  updateFolderData(String path) async {
+  updateFolderData(String path, {bool addPath = true}) async {
     print("Update Called");
 
     if (currentPath != path) {
@@ -56,6 +58,8 @@ class FolderProvider extends ChangeNotifier {
         currentBox = _baseProvider.getStorageBoxFromPath(path);
         currentPath = path;
         print("Update $path");
+
+        if (addPath) insertPathBox(path);
 
         await _loadBlazeEntitiesInPath();
         //TODO Load Files
@@ -119,8 +123,10 @@ class FolderProvider extends ChangeNotifier {
   }
 
   Future sort() async {
-    await currentFolderList.sort((a, b) => a.basename.toLowerCase().compareTo(b.basename.toLowerCase()));
-    await currentFileList.sort((a, b) => a.basename.toLowerCase().compareTo(b.basename.toLowerCase()));
+    await currentFolderList.sort(
+        (a, b) => a.basename.toLowerCase().compareTo(b.basename.toLowerCase()));
+    await currentFileList.sort(
+        (a, b) => a.basename.toLowerCase().compareTo(b.basename.toLowerCase()));
 
     await currentBlazeList.clear();
 
@@ -135,13 +141,11 @@ class FolderProvider extends ChangeNotifier {
   }
 
   Future<List<FileSystemEntity>> dirContents(Directory dir) async {
-
     List<FileSystemEntity> contents = dir.listSync().toList();
     for (var fileOrDir in contents) {
-      if(FileUtils.isLegitHidden(fileOrDir))
-        continue;
+      if (FileUtils.isLegitHidden(fileOrDir)) continue;
 
-        if (fileOrDir is File) {
+      if (fileOrDir is File) {
         currentFileList.add(FileUtils.getBlazeEntitySync(fileOrDir));
         print(fileOrDir.path);
       } else if (fileOrDir is Directory) {
@@ -151,5 +155,24 @@ class FolderProvider extends ChangeNotifier {
     }
   }
 
+  insertPathBox(String path) {
+    if (path == currentBox.path)
+      pathBoxList.add(PathBox(path, currentBox.boxName));
+    else
+      pathBoxList.add(FileUtils.getPathBox(path));
+  }
 
+  resetPathBox() {
+    pathBoxList.clear();
+    notifyListeners();
+  }
+
+  handlePop() {
+    if (pathBoxList.length <= 1)
+      return true;
+    else {
+      pathBoxList.removeLast();
+      updateFolderData(pathBoxList.last.path, addPath: false);
+    }
+  }
 }

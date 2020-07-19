@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:fileexplorer/enums/file_categories.dart';
 import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
+import 'package:fileexplorer/models/path_box.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -419,5 +420,9 @@ class FileUtils {
   static String getExactDirectory(String path) {
     var pathArr = dirname(path).split('/');
     return pathArr[pathArr.length - 1];
+  }
+
+  static getPathBox(String path){
+    return PathBox(path,basename(path));
   }
 }

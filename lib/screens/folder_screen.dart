@@ -3,6 +3,7 @@ import 'package:fileexplorer/providers/folder_provider.dart';
 import 'package:fileexplorer/widgets/folder_view_tile.dart';
 import 'package:fileexplorer/widgets/item_list_tile.dart';
 import 'package:fileexplorer/widgets/loading_list_tile.dart';
+import 'package:fileexplorer/widgets/path_lane.dart';
 import 'package:fileexplorer/widgets/storage_box_browser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,66 +30,83 @@ class _FolderScreenState extends State<FolderScreen> {
   }
 
   @override
+  void dispose() {
+    Provider.of<FolderProvider>(context, listen: false).resetPathBox();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     FolderProvider folderProvider = Provider.of<FolderProvider>(context);
 
     print("Building ${folderProvider.currentBlazeList.length}");
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            forceElevated: true,
-            elevation: 1,
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              iconSize: 32,
-              icon: Icon(
-                EvaIcons.menu,
-              ),
-              onPressed: () {},
-            ),
-            actions: <Widget>[
-              IconButton(
-                iconSize: 26,
+    return WillPopScope(
+      onWillPop: ()async {
+        return folderProvider.handlePop();
+      },
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              forceElevated: true,
+              elevation: 1,
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                iconSize: 32,
                 icon: Icon(
-                  EvaIcons.searchOutline,
+                  EvaIcons.menu,
                 ),
                 onPressed: () {},
               ),
-              IconButton(
-                iconSize: 26,
-                icon: Icon(
-                  EvaIcons.moreVerticalOutline,
+              actions: <Widget>[
+                IconButton(
+                  iconSize: 26,
+                  icon: Icon(
+                    EvaIcons.searchOutline,
+                  ),
+                  onPressed: () {},
                 ),
-                onPressed: () {},
+                IconButton(
+                  iconSize: 26,
+                  icon: Icon(
+                    EvaIcons.moreVerticalOutline,
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            SliverToBoxAdapter(
+              child: StorageBoxBrowser(
+                storageBox: folderProvider.currentBox,
               ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child:  StorageBoxBrowser(
-              storageBox: folderProvider.currentBox,
             ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return folderProvider.isFree()
-                    ? FolderViewTile(
-                  file: folderProvider.currentBlazeList[index],
-                  onTap: () {
-                    folderProvider.updateFolderData(
-                        folderProvider.currentBlazeList[index].path);
-                  },
-                )
-                    : const LoadingListTile();
-              },
-              childCount: folderProvider.isFree()
-                  ? folderProvider.currentBlazeList.length
-                  : 20,
+            SliverToBoxAdapter(
+              child: PathLane(
+                pathBoxList: folderProvider.pathBoxList,
+              ),
             ),
-          ),
-        ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return folderProvider.isFree()
+                      ? FolderViewTile(
+                          file: folderProvider.currentBlazeList[index],
+                          onTap: () {
+                            folderProvider.updateFolderData(
+                                folderProvider.currentBlazeList[index].path);
+                          },
+                        )
+                      : const LoadingListTile();
+                },
+                childCount: folderProvider.isFree()
+                    ? folderProvider.currentBlazeList.length
+                    : 20,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
