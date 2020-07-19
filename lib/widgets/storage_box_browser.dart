@@ -4,10 +4,10 @@ import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class StorageBoxBrowser extends StatelessWidget with PreferredSizeWidget{
+class StorageBoxBrowser extends StatelessWidget{
   final StorageBoxData storageBox;
 
-  StorageBoxBrowser({
+  const StorageBoxBrowser({
     Key key, this.storageBox,
   }) : super(key: key);
 
@@ -74,7 +74,4 @@ class StorageBoxBrowser extends StatelessWidget with PreferredSizeWidget{
     );
   }
 
-  @override
-  // TODO: implement preferredSize
-  Size get preferredSize => new Size.fromHeight(kToolbarHeight);
 }

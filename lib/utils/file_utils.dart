@@ -50,17 +50,11 @@ class FileUtils {
     return filteredPaths;
   }
 
-  static Future<BlazeFileEntity> getBlazeEntity(
+  static Future<BlazeFileEntity> getBlazeEntity( //cannot measure folder size
       FileSystemEntity fileSystemEntity) async {
     if (fileSystemEntity is File) {
       var category = FileUIUtils.sortCategory(fileSystemEntity.path);
-      var isImage = category == FileCategory.Image ? true : false;
-      /*var properties = isImage ? ImageSizGetter.getSize(fileSystemEntity) : null;
-      var height =
-          isImage ? properties.height : 0;
-      var width = isImage ? properties.width : 0;
-      var isHighSize = height > 700 || width > 700 ? true : false;
-      var cacheRatio = isHighSize ? 0.2 : .5;*/
+//      var isImage = category == FileCategory.Image ? true : false;
       return BlazeFileEntity(
         fileEntityType: FileEntityType.File,
         path: fileSystemEntity.path,
@@ -84,8 +78,51 @@ class FileUtils {
         fileEntityType: FileEntityType.Folder,
         path: fileSystemEntity.path,
         name: basename(fileSystemEntity.path),
+        basename: basename(fileSystemEntity.path),
         timestamp: stat.accessed.toIso8601String(),
         filesInsideCount: (await dir.list().length),
+      );
+    }
+  }
+
+  static BlazeFileEntity getBlazeEntitySync(FileSystemEntity fileSystemEntity) {
+    if (fileSystemEntity is File) {
+      var category = FileUIUtils.sortCategory(fileSystemEntity.path);
+//      var isImage = category == FileCategory.Image ? true : false;
+      return BlazeFileEntity(
+        fileEntityType: FileEntityType.File,
+        path: fileSystemEntity.path,
+        basename: basenameWithoutExtension(fileSystemEntity.path),
+        extension: extension(fileSystemEntity.path),
+        name: basename(fileSystemEntity.path),
+        mime: mime(fileSystemEntity.path),
+        size: FileUtils.formatBytes(fileSystemEntity.lengthSync(), 2),
+        timestamp: (fileSystemEntity.lastAccessedSync()).toIso8601String(),
+        category: category,
+        file: fileSystemEntity,
+      );
+    } else {
+      var dir = Directory(fileSystemEntity.path);
+      var stat = FileStat.statSync(fileSystemEntity.path);
+      var list = dir.listSync();
+      var items = list.length;
+      int size = 0;
+      dir
+          .listSync(recursive: true, followLinks: false)
+          .forEach((FileSystemEntity entity) {
+        if (entity is File) {
+          size += entity.lengthSync();
+        }
+      });
+
+      return BlazeFileEntity(
+        fileEntityType: FileEntityType.Folder,
+        path: fileSystemEntity.path,
+        name: basename(fileSystemEntity.path),
+        basename: basename(fileSystemEntity.path),
+        timestamp: stat.accessed.toIso8601String(),
+        filesInsideCount: items,
+        size: FileUtils.formatBytes(size, 2),
       );
     }
   }

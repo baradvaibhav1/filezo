@@ -63,8 +63,8 @@ class MyApp extends StatelessWidget {
         ),
         iconTheme: IconThemeData(color: const Color(0xff293B63)),
         dividerTheme: DividerThemeData(
-          color: Theme.of(context).canvasColor,
-          thickness: .13,
+          color: Colors.grey.withOpacity(0.1),
+          thickness: 1,
         ),
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,

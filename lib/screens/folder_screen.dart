@@ -1,17 +1,14 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:fileexplorer/providers/folder_provider.dart';
+import 'package:fileexplorer/widgets/folder_view_tile.dart';
 import 'package:fileexplorer/widgets/item_list_tile.dart';
+import 'package:fileexplorer/widgets/loading_list_tile.dart';
 import 'package:fileexplorer/widgets/storage_box_browser.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-
 class FolderScreen extends StatefulWidget {
-
-
   final String path;
-
 
   FolderScreen(this.path);
 
@@ -20,19 +17,22 @@ class FolderScreen extends StatefulWidget {
 }
 
 class _FolderScreenState extends State<FolderScreen> {
-
   @override
   void initState() {
-    FolderProvider folderProvider = Provider.of<FolderProvider>(context,listen: false);
+    FolderProvider folderProvider =
+        Provider.of<FolderProvider>(context, listen: false);
 
     changeFolder(folderProvider);
 
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     FolderProvider folderProvider = Provider.of<FolderProvider>(context);
+
+    print("Building ${folderProvider.currentBlazeList.length}");
 
     return Scaffold(
       body: CustomScrollView(
@@ -66,19 +66,26 @@ class _FolderScreenState extends State<FolderScreen> {
             ],
           ),
           SliverToBoxAdapter(
-            child: StorageBoxBrowser(
+            child:  StorageBoxBrowser(
               storageBox: folderProvider.currentBox,
             ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return BlazeItemTile(
+                return folderProvider.isFree()
+                    ? FolderViewTile(
                   file: folderProvider.currentBlazeList[index],
-                );
+                  onTap: () {
+                    folderProvider.updateFolderData(
+                        folderProvider.currentBlazeList[index].path);
+                  },
+                )
+                    : const LoadingListTile();
               },
-              childCount: folderProvider.currentBlazeList.length,
-
+              childCount: folderProvider.isFree()
+                  ? folderProvider.currentBlazeList.length
+                  : 20,
             ),
           ),
         ],

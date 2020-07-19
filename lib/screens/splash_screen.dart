@@ -11,6 +11,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:root_access/root_access.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -18,6 +19,9 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
+
+  bool _rootAccess = false;
+
   startTimeout() {
     return Timer(Duration(seconds: 2), handleTimeout);
   }
@@ -64,6 +68,8 @@ class _SplashState extends State<Splash> {
       Provider.of<BaseProvider>(context, listen: false).initializeBlaze();
     }
   }
+
+
 
   @override
   void initState() {
