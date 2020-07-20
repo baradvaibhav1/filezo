@@ -80,11 +80,7 @@ class _FolderScreenState extends State<FolderScreen> {
                 ),
               ],
             ),
-            SliverToBoxAdapter(
-              child: StorageBoxBrowser(
-                storageBox: folderProvider.currentBox,
-              ),
-            ),
+
             SliverToBoxAdapter(
               child: PathLane(
                 pathBoxList: folderProvider.pathBoxList,

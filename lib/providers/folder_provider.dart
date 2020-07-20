@@ -65,7 +65,7 @@ class FolderProvider extends ChangeNotifier {
         //TODO Load Files
       }
 
-    cancelLoading();
+      cancelLoading();
     }
   }
 
@@ -171,9 +171,10 @@ class FolderProvider extends ChangeNotifier {
   }
 
   handlePop() {
-    if (pathBoxList.length <= 1)
+    if (pathBoxList.length <= 1) {
+      pathBoxList.clear();
       return true;
-    else {
+    } else {
       pathBoxList.removeLast();
       updateFolderData(pathBoxList.last.path, addPath: false);
     }
