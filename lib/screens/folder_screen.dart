@@ -26,8 +26,6 @@ class _FolderScreenState extends State<FolderScreen> {
         Provider.of<FolderProvider>(context, listen: false);
 
     changeFolder(folderProvider);
-
-    // TODO: implement initState
     super.initState();
   }
 
@@ -44,13 +42,15 @@ class _FolderScreenState extends State<FolderScreen> {
 
     print("Building ${folderProvider.currentBlazeList.length}");
 
+    var pathKey = folderProvider.getPathKey(folderProvider.currentPath);
+
     return WillPopScope(
-      onWillPop: ()async {
+      onWillPop: () async {
         return folderProvider.handlePop();
       },
       child: Scaffold(
         body: CustomScrollView(
-          key: ValueKey<int>(Random(DateTime.now().millisecondsSinceEpoch).nextInt(4294967296)),
+          key: pathKey.key,
           slivers: <Widget>[
             SliverAppBar(
               forceElevated: true,
@@ -80,11 +80,10 @@ class _FolderScreenState extends State<FolderScreen> {
                 ),
               ],
             ),
-
             SliverToBoxAdapter(
               child: PathLane(
                 pathBoxList: folderProvider.pathBoxList,
-                pathTap: (path){
+                pathTap: (path) {
                   folderProvider.goToPath(path);
                 },
               ),
@@ -92,13 +91,17 @@ class _FolderScreenState extends State<FolderScreen> {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
+                  var blazeFile = folderProvider.currentBlazeList[index];
                   return folderProvider.isFree()
                       ? FolderViewTile(
-                          file: folderProvider.currentBlazeList[index],
+                          file: blazeFile,
                           onTap: () {
-                            folderProvider.updateFolderData(
-                                folderProvider.currentBlazeList[index].path);
+                            folderProvider.onTap(index);
                           },
+                          onLongPress: () {
+                            folderProvider.onLongPress(index);
+                          },
+                          selectType: blazeFile.selectType,
                         )
                       : const LoadingListTile();
                 },

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
+import 'package:fileexplorer/enums/select_type.dart';
 import 'package:fileexplorer/enums/view_states.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/path_box.dart';
+import 'package:fileexplorer/models/path_key.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
@@ -16,8 +19,11 @@ class FolderProvider extends ChangeNotifier {
   List<BlazeFileEntity> currentBlazeList = [];
   List<BlazeFileEntity> currentFolderList = [];
   List<BlazeFileEntity> currentFileList = [];
+  List<BlazeFileEntity> selectedList = [];
   List<PathBox> pathBoxList = [];
   ViewState viewState = ViewState.Free;
+  SelectType selectState = SelectType.UnAvailable;
+  List<PathKey> pathKeyList = [];
 
   FolderProvider();
 
@@ -171,10 +177,17 @@ class FolderProvider extends ChangeNotifier {
   }
 
   handlePop() {
+    if (selectState != SelectType.UnAvailable) {
+      resetSelection();
+      return false;
+    }
+
     if (pathBoxList.length <= 1) {
       pathBoxList.clear();
+      pathKeyList.clear();
       return true;
     } else {
+      removeKey(pathBoxList.last.path);
       pathBoxList.removeLast();
       updateFolderData(pathBoxList.last.path, addPath: false);
     }
@@ -187,5 +200,95 @@ class FolderProvider extends ChangeNotifier {
       pathBoxList.removeRange(index + 1, pathBoxList.length);
       updateFolderData(path, addPath: false);
     }
+  }
+
+  firstSelect(int index) {
+    if (selectState == SelectType.UnAvailable) {
+      activateSelection();
+      select(index);
+      notifyListeners();
+    }
+  }
+
+  activateSelection({bool notify = false}) {
+    selectState = SelectType.Available;
+    setSelectList();
+    if (notify) notifyListeners();
+  }
+
+  select(int index, {bool notify = false}) {
+    var entity =
+        currentBlazeList[index].copyWith(selectType: SelectType.Selected);
+    currentBlazeList[index] = entity;
+    selectedList.add(entity);
+
+    if (notify) notifyListeners();
+  }
+
+  deselect(int index, {bool notify = false}) {
+    selectedList.remove(currentBlazeList[index]);
+    var entity =
+        currentBlazeList[index].copyWith(selectType: SelectType.Available);
+    currentBlazeList[index] = entity;
+
+    if (notify) notifyListeners();
+  }
+
+  resetSelection() {
+    if (selectState != SelectType.UnAvailable) {
+      selectState = SelectType.UnAvailable;
+      removeSelectList();
+      selectedList.clear();
+      notifyListeners();
+    }
+  }
+
+  setSelectList() {
+    currentBlazeList = currentBlazeList
+        .map((e) => e.copyWith(selectType: SelectType.Available))
+        .toList();
+  }
+
+  removeSelectList() {
+    currentBlazeList = currentBlazeList
+        .map((e) => e.copyWith(selectType: SelectType.UnAvailable))
+        .toList();
+  }
+
+  onTap(int index) {
+    var blazeFile = currentBlazeList[index];
+
+    if (selectState == SelectType.UnAvailable)
+      updateFolderData(blazeFile.path);
+    else {
+      if (blazeFile.selectType == SelectType.Available)
+        select(index, notify: true);
+      else
+        deselect(index, notify: true);
+    }
+  }
+
+  onLongPress(int index) {
+    var blazeFile = currentBlazeList[index];
+
+    if (selectState == SelectType.UnAvailable) firstSelect(index);
+  }
+
+  PathKey getPathKey(String path) {
+    var key =
+        pathKeyList.firstWhere((element) => element.path == path, orElse: () {
+      var newKey = PathKey(
+          path,
+          ValueKey<int>(Random(DateTime.now().millisecondsSinceEpoch)
+              .nextInt(4294967296)));
+      pathKeyList.add(newKey);
+      return newKey;
+    });
+
+    return key;
+  }
+
+  removeKey(String path) {
+    pathKeyList.removeWhere((element) => element.path == path);
   }
 }

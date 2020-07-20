@@ -46,11 +46,11 @@ class MyApp extends StatelessWidget {
       title: 'FileZo File Explorer',
       theme: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xff4591F2),
+        primaryColorDark: const Color(0xff456AEF),
         scaffoldBackgroundColor: const Color(0xffFAFAFA),
-        toggleableActiveColor: const Color(0xff06BD46),
+        //: const Color(0xff06BD46),
         appBarTheme: AppBarTheme(
-
           brightness: Brightness.light,
           color: Colors.white,
           iconTheme: IconThemeData(

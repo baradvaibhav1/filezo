@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:fileexplorer/enums/file_entity_type.dart';
+import 'package:fileexplorer/enums/select_type.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
+import 'package:fileexplorer/widgets/blaze_check_box.dart';
 import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -13,11 +15,15 @@ const double ICON_SIZE = 40.0;
 class FolderViewTile extends StatelessWidget {
   final BlazeFileEntity file;
   final onTap;
+  final onLongPress;
+  final SelectType selectType;
 
   const FolderViewTile({
     Key key,
     this.file,
     this.onTap,
+    this.onLongPress,
+    this.selectType,
   }) : super(key: key);
 
   @override
@@ -30,7 +36,7 @@ class FolderViewTile extends StatelessWidget {
           dense: true,
           contentPadding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           onTap: onTap,
-          onLongPress: () {},
+          onLongPress: onLongPress,
           leading: Padding(
             padding: const EdgeInsets.only(right: 4),
             child: SizedBox(
@@ -50,7 +56,8 @@ class FolderViewTile extends StatelessWidget {
                         )
                       : Image.asset(
                           !isFolder
-                              ? FileUIUtils.getFileIconFromCategory(file.category)
+                              ? FileUIUtils.getFileIconFromCategory(
+                                  file.category)
                               : "assets/images/folder.png",
                           height: ICON_SIZE,
                           width: ICON_SIZE,
@@ -107,13 +114,20 @@ class FolderViewTile extends StatelessWidget {
                 fontSize: 14,
                 textColor: Colors.grey[400],
               ),
-              StyledText(
-                file.size,
-                fontWeight: FontWeight.w300,
-                fontSize: 12,
-                textColor: Colors.grey[400],
+              Flexible(
+                child: StyledText(
+                  file.size,
+                  alignment: Alignment.centerLeft,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 12,
+                  textColor: Colors.grey[400],
+                  textOverflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
+          ),
+          trailing: BlazeCheckBox(
+            selectType: selectType,
           ),
         ),
         const Divider(

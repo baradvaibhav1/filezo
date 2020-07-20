@@ -27,7 +27,8 @@ class _$BlazeFileEntityTearOff {
       int imageWidth,
       int imageHeight,
       int cacheWidth,
-      int cacheHeight}) {
+      int cacheHeight,
+      SelectType selectType = SelectType.UnAvailable}) {
     return _BlazeFileEntity(
       fileEntityType: fileEntityType,
       path: path,
@@ -44,6 +45,7 @@ class _$BlazeFileEntityTearOff {
       imageHeight: imageHeight,
       cacheWidth: cacheWidth,
       cacheHeight: cacheHeight,
+      selectType: selectType,
     );
   }
 }
@@ -67,6 +69,7 @@ mixin _$BlazeFileEntity {
   int get imageHeight;
   int get cacheWidth;
   int get cacheHeight;
+  SelectType get selectType;
 
   $BlazeFileEntityCopyWith<BlazeFileEntity> get copyWith;
 }
@@ -90,7 +93,8 @@ abstract class $BlazeFileEntityCopyWith<$Res> {
       int imageWidth,
       int imageHeight,
       int cacheWidth,
-      int cacheHeight});
+      int cacheHeight,
+      SelectType selectType});
 }
 
 class _$BlazeFileEntityCopyWithImpl<$Res>
@@ -118,6 +122,7 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
     Object imageHeight = freezed,
     Object cacheWidth = freezed,
     Object cacheHeight = freezed,
+    Object selectType = freezed,
   }) {
     return _then(_value.copyWith(
       fileEntityType: fileEntityType == freezed
@@ -142,6 +147,8 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
       cacheWidth: cacheWidth == freezed ? _value.cacheWidth : cacheWidth as int,
       cacheHeight:
           cacheHeight == freezed ? _value.cacheHeight : cacheHeight as int,
+      selectType:
+          selectType == freezed ? _value.selectType : selectType as SelectType,
     ));
   }
 }
@@ -167,7 +174,8 @@ abstract class _$BlazeFileEntityCopyWith<$Res>
       int imageWidth,
       int imageHeight,
       int cacheWidth,
-      int cacheHeight});
+      int cacheHeight,
+      SelectType selectType});
 }
 
 class __$BlazeFileEntityCopyWithImpl<$Res>
@@ -197,6 +205,7 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
     Object imageHeight = freezed,
     Object cacheWidth = freezed,
     Object cacheHeight = freezed,
+    Object selectType = freezed,
   }) {
     return _then(_BlazeFileEntity(
       fileEntityType: fileEntityType == freezed
@@ -221,6 +230,8 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
       cacheWidth: cacheWidth == freezed ? _value.cacheWidth : cacheWidth as int,
       cacheHeight:
           cacheHeight == freezed ? _value.cacheHeight : cacheHeight as int,
+      selectType:
+          selectType == freezed ? _value.selectType : selectType as SelectType,
     ));
   }
 }
@@ -243,7 +254,9 @@ class _$_BlazeFileEntity
       this.imageWidth,
       this.imageHeight,
       this.cacheWidth,
-      this.cacheHeight});
+      this.cacheHeight,
+      this.selectType = SelectType.UnAvailable})
+      : assert(selectType != null);
 
   @override
   final FileEntityType fileEntityType;
@@ -275,10 +288,13 @@ class _$_BlazeFileEntity
   final int cacheWidth;
   @override
   final int cacheHeight;
+  @JsonKey(defaultValue: SelectType.UnAvailable)
+  @override
+  final SelectType selectType;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BlazeFileEntity(fileEntityType: $fileEntityType, path: $path, basename: $basename, extension: $extension, name: $name, mime: $mime, size: $size, timestamp: $timestamp, category: $category, filesInsideCount: $filesInsideCount, file: $file, imageWidth: $imageWidth, imageHeight: $imageHeight, cacheWidth: $cacheWidth, cacheHeight: $cacheHeight)';
+    return 'BlazeFileEntity(fileEntityType: $fileEntityType, path: $path, basename: $basename, extension: $extension, name: $name, mime: $mime, size: $size, timestamp: $timestamp, category: $category, filesInsideCount: $filesInsideCount, file: $file, imageWidth: $imageWidth, imageHeight: $imageHeight, cacheWidth: $cacheWidth, cacheHeight: $cacheHeight, selectType: $selectType)';
   }
 
   @override
@@ -300,7 +316,8 @@ class _$_BlazeFileEntity
       ..add(DiagnosticsProperty('imageWidth', imageWidth))
       ..add(DiagnosticsProperty('imageHeight', imageHeight))
       ..add(DiagnosticsProperty('cacheWidth', cacheWidth))
-      ..add(DiagnosticsProperty('cacheHeight', cacheHeight));
+      ..add(DiagnosticsProperty('cacheHeight', cacheHeight))
+      ..add(DiagnosticsProperty('selectType', selectType));
   }
 
   @override
@@ -346,7 +363,10 @@ class _$_BlazeFileEntity
                     .equals(other.cacheWidth, cacheWidth)) &&
             (identical(other.cacheHeight, cacheHeight) ||
                 const DeepCollectionEquality()
-                    .equals(other.cacheHeight, cacheHeight)));
+                    .equals(other.cacheHeight, cacheHeight)) &&
+            (identical(other.selectType, selectType) ||
+                const DeepCollectionEquality()
+                    .equals(other.selectType, selectType)));
   }
 
   @override
@@ -366,7 +386,8 @@ class _$_BlazeFileEntity
       const DeepCollectionEquality().hash(imageWidth) ^
       const DeepCollectionEquality().hash(imageHeight) ^
       const DeepCollectionEquality().hash(cacheWidth) ^
-      const DeepCollectionEquality().hash(cacheHeight);
+      const DeepCollectionEquality().hash(cacheHeight) ^
+      const DeepCollectionEquality().hash(selectType);
 
   @override
   _$BlazeFileEntityCopyWith<_BlazeFileEntity> get copyWith =>
@@ -389,7 +410,8 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
       int imageWidth,
       int imageHeight,
       int cacheWidth,
-      int cacheHeight}) = _$_BlazeFileEntity;
+      int cacheHeight,
+      SelectType selectType}) = _$_BlazeFileEntity;
 
   @override
   FileEntityType get fileEntityType;
@@ -421,6 +443,8 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
   int get cacheWidth;
   @override
   int get cacheHeight;
+  @override
+  SelectType get selectType;
   @override
   _$BlazeFileEntityCopyWith<_BlazeFileEntity> get copyWith;
 }
