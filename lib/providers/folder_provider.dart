@@ -164,6 +164,11 @@ class FolderProvider extends ChangeNotifier {
     }
   }
 
+  isSelectAvailable()
+  {
+    return selectState!=SelectType.UnAvailable;
+  }
+
   insertPathBox(String path) {
     if (path == currentBox.path)
       pathBoxList.add(PathBox(path, currentBox.boxName));
@@ -176,9 +181,11 @@ class FolderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  handlePop() {
+  handlePop({VoidCallback onSelectStopped}) {
     if (selectState != SelectType.UnAvailable) {
+      if (onSelectStopped != null) onSelectStopped.call();
       resetSelection();
+
       return false;
     }
 
@@ -255,6 +262,25 @@ class FolderProvider extends ChangeNotifier {
         .toList();
   }
 
+  selectAll() {
+    currentBlazeList = currentBlazeList
+        .map((e) => e.copyWith(selectType: SelectType.Selected))
+        .toList();
+
+    selectedList.clear();
+    selectedList.addAll(currentBlazeList);
+    notifyListeners();
+  }
+
+  unSelectAll() {
+    currentBlazeList = currentBlazeList
+        .map((e) => e.copyWith(selectType: SelectType.Available))
+        .toList();
+
+    selectedList.clear();
+    notifyListeners();
+  }
+
   onTap(int index) {
     var blazeFile = currentBlazeList[index];
 
@@ -268,10 +294,15 @@ class FolderProvider extends ChangeNotifier {
     }
   }
 
-  onLongPress(int index) {
+  bool onLongPress(int index) {
     var blazeFile = currentBlazeList[index];
 
-    if (selectState == SelectType.UnAvailable) firstSelect(index);
+    if (selectState == SelectType.UnAvailable) {
+      firstSelect(index);
+      return true;
+    }
+
+    return false;
   }
 
   PathKey getPathKey(String path) {
@@ -290,5 +321,9 @@ class FolderProvider extends ChangeNotifier {
 
   removeKey(String path) {
     pathKeyList.removeWhere((element) => element.path == path);
+  }
+
+  isAllSelected(){
+    return selectedList.length==currentBlazeList.length;
   }
 }
