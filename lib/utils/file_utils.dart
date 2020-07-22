@@ -51,7 +51,8 @@ class FileUtils {
     return filteredPaths;
   }
 
-  static Future<BlazeFileEntity> getBlazeEntity( //cannot measure folder size
+  static Future<BlazeFileEntity> getBlazeEntity(
+      //cannot measure folder size
       FileSystemEntity fileSystemEntity) async {
     if (fileSystemEntity is File) {
       var category = FileUIUtils.sortCategory(fileSystemEntity.path);
@@ -75,13 +76,23 @@ class FileUtils {
     } else {
       var dir = Directory(fileSystemEntity.path);
       var stat = await FileStat.stat(fileSystemEntity.path);
+      var list = await dir.list().toList();
+      int size = 0;
+
+      list.forEach((FileSystemEntity entity) {
+        if (entity is File) {
+          size += entity.lengthSync();
+        }
+      });
+
       return BlazeFileEntity(
         fileEntityType: FileEntityType.Folder,
         path: fileSystemEntity.path,
         name: basename(fileSystemEntity.path),
         basename: basename(fileSystemEntity.path),
         timestamp: stat.accessed.toIso8601String(),
-        filesInsideCount: (await dir.list().length),
+        filesInsideCount: (list.length),
+        size: FileUtils.formatBytes(size, 2),
       );
     }
   }
@@ -422,7 +433,7 @@ class FileUtils {
     return pathArr[pathArr.length - 1];
   }
 
-  static getPathBox(String path){
-    return PathBox(path,basename(path));
+  static getPathBox(String path) {
+    return PathBox(path, basename(path));
   }
 }

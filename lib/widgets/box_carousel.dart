@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fileexplorer/models/storage_box_data.dart';
+import 'package:fileexplorer/router.gr.dart';
 import 'package:fileexplorer/screens/folder_screen.dart';
 import 'package:fileexplorer/screens/image_category_screen.dart';
 import 'package:fileexplorer/widgets/custom_space_box_w.dart';
@@ -22,15 +24,14 @@ class BoxCarousel extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: storageBoxes.length,
         itemBuilder: (BuildContext context, int index) {
-          return StorageBox(data: storageBoxes[index], onTap: (){
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                //transitionDuration: Duration(milliseconds: 600),
-                pageBuilder: (_, __, ___) => FolderScreen(storageBoxes[index].path),
-              ),
-            );
-          },);
+          return StorageBox(
+            data: storageBoxes[index],
+            onTap: () {
+              //print(storageBoxes[index].path);
+              ExtendedNavigator.of(context)
+                  .push("/folder",arguments: FolderScreenArguments(path: storageBoxes[index].path));
+            },
+          );
         },
         separatorBuilder: (BuildContext context, int index) {
           return CustomSpaceBoxW(16);

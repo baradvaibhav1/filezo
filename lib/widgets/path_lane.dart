@@ -7,7 +7,6 @@ import 'package:fileexplorer/widgets/custom_space_box_w.dart';
 import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 
 class PathLane extends StatelessWidget {

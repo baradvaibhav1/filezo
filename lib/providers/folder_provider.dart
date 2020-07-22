@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 class FolderProvider extends ChangeNotifier {
   BaseProvider _baseProvider;
   String currentPath;
+  String loadedPath;
   StorageBoxData currentBox;
   List<BlazeFileEntity> currentBlazeList = [];
   List<BlazeFileEntity> currentFolderList = [];
@@ -44,20 +45,20 @@ class FolderProvider extends ChangeNotifier {
         currentBox = _baseProvider.getPrimaryStorage();
         currentPath = currentBox.path;
 
-        await _loadBlazeEntitiesInPath();
+        await loadBlazeEntitiesInPath();
       }
     } else {
       //first setup
       //await _initSetup();
     }
-    cancelLoadingNoNotif();
+    cancelLoading();
     // notifyListeners();
   }
 
-  updateFolderData(String path, {bool addPath = true}) async {
+  updateFolderData(String path, {bool addPath = true, bool notify = true}) async {
     print("Update Called");
 
-    if (currentPath != path) {
+    if (loadedPath != path) {
       setLoading();
 
       if (_baseProvider.isFree()) {
@@ -66,12 +67,11 @@ class FolderProvider extends ChangeNotifier {
         print("Update $path");
 
         if (addPath) insertPathBox(path);
-
-        await _loadBlazeEntitiesInPath();
+        //await loadBlazeEntitiesInPath();
         //TODO Load Files
       }
 
-      cancelLoading();
+      cancelLoading(notify: notify);
     }
   }
 
@@ -80,51 +80,48 @@ class FolderProvider extends ChangeNotifier {
       currentBox = _baseProvider.getPrimaryStorage();
       currentPath = currentBox.path;
 
-      await _loadBlazeEntitiesInPath();
+      await loadBlazeEntitiesInPath();
       //TODO Load Files
     }
   }
 
-  _loadBlazeEntitiesInPath() async {
-    setLoading();
+  Future<List<BlazeFileEntity>> loadBlazeEntitiesInPath() async {
+    if (!isPathLoaded()) {
+      setLoading();
 
-    currentBlazeList.clear();
-    currentFolderList.clear();
-    currentFileList.clear();
+      currentBlazeList.clear();
+      currentFolderList.clear();
+      currentFileList.clear();
 
-    await dirContents(Directory(currentPath));
+      await dirContents(Directory(currentPath));
 
-    await sort();
+      await sort();
 
-    print(currentFolderList.length);
-    print(currentFileList.length);
-    // await currentBlazeList.addAll(list);
+      print(currentFolderList.length);
+      print(currentFileList.length);
+      // await currentBlazeList.addAll(list);
 
-    print("Loading done");
+      print("Loading done");
 
-    cancelLoading();
+      cancelLoading();
+    }
+
+    loadedPath = currentPath;
+    return currentBlazeList;
   }
 
-  setLoading() {
+  setLoading({bool notify = false}) {
     if (viewState != ViewState.Loading) {
       viewState = ViewState.Loading;
-      notifyListeners();
+      if (notify) notifyListeners();
     }
   }
 
-  cancelLoading() {
+  cancelLoading({bool notify = false}) {
     if (viewState != ViewState.Free) {
       viewState = ViewState.Free;
-      notifyListeners();
+      if (notify) notifyListeners();
     }
-  }
-
-  setLoadingNoNotif() {
-    viewState = ViewState.Loading;
-  }
-
-  cancelLoadingNoNotif() {
-    viewState = ViewState.Free;
   }
 
   isFree() {
@@ -132,19 +129,17 @@ class FolderProvider extends ChangeNotifier {
   }
 
   Future sort() async {
-    await currentFolderList.sort(
+    currentFolderList.sort(
         (a, b) => a.basename.toLowerCase().compareTo(b.basename.toLowerCase()));
-    await currentFileList.sort(
+    currentFileList.sort(
         (a, b) => a.basename.toLowerCase().compareTo(b.basename.toLowerCase()));
 
-    await currentBlazeList.clear();
+    currentBlazeList.clear();
 
-    await currentBlazeList.addAll(currentFolderList);
-    await currentBlazeList.addAll(currentFileList);
+    currentBlazeList.addAll(currentFolderList);
+    currentBlazeList.addAll(currentFileList);
 
     print("Sorting done");
-
-    notifyListeners();
 
     return;
   }
@@ -155,18 +150,17 @@ class FolderProvider extends ChangeNotifier {
       if (FileUtils.isLegitHidden(fileOrDir)) continue;
 
       if (fileOrDir is File) {
-        currentFileList.add(FileUtils.getBlazeEntitySync(fileOrDir));
+        currentFileList.add(await FileUtils.getBlazeEntity(fileOrDir));
         print(fileOrDir.path);
       } else if (fileOrDir is Directory) {
-        currentFolderList.add(FileUtils.getBlazeEntitySync(fileOrDir));
+        currentFolderList.add(await FileUtils.getBlazeEntity(fileOrDir));
         print(fileOrDir.path);
       }
     }
   }
 
-  isSelectAvailable()
-  {
-    return selectState!=SelectType.UnAvailable;
+  isSelectAvailable() {
+    return selectState != SelectType.UnAvailable;
   }
 
   insertPathBox(String path) {
@@ -190,6 +184,7 @@ class FolderProvider extends ChangeNotifier {
     }
 
     if (pathBoxList.length <= 1) {
+      resetProvider();
       pathBoxList.clear();
       pathKeyList.clear();
       return true;
@@ -323,7 +318,25 @@ class FolderProvider extends ChangeNotifier {
     pathKeyList.removeWhere((element) => element.path == path);
   }
 
-  isAllSelected(){
-    return selectedList.length==currentBlazeList.length;
+  isAllSelected() {
+    return selectedList.length == currentBlazeList.length;
+  }
+
+  resetProvider() {
+    currentPath = "";
+    loadedPath = "";
+    currentBox = null;
+    currentBlazeList.clear();
+    currentFolderList.clear();
+    currentFileList.clear();
+    selectedList.clear();
+    pathBoxList.clear();
+    viewState = ViewState.Free;
+    selectState = SelectType.UnAvailable;
+    pathKeyList.clear();
+  }
+
+  isPathLoaded() {
+    return currentPath == loadedPath;
   }
 }

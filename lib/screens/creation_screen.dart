@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fileexplorer/data/storage_boxes.dart';
 import 'package:fileexplorer/enums/boxtypes.dart';
 import 'package:fileexplorer/widgets/box_carousel.dart';
