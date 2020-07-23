@@ -27,6 +27,9 @@ class AppColors {
 
   static const Color TextLightColor = const Color(0xFFB3B6BD);
   static const Color TextDartColor = const Color(0xFF2B313F);
+  static const Color ButtonLiteColor = const Color(0xFF318FFF);
+
+
 
 
 

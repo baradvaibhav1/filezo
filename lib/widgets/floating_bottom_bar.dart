@@ -9,7 +9,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:path/path.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:fileexplorer/widgets/storage_box.dart';
-
 import 'custom_space_box_h.dart';
 
 class FloatingBottomBar extends StatelessWidget {
@@ -63,7 +62,6 @@ class FloatingBottomBar extends StatelessWidget {
     ];
     return list;
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
