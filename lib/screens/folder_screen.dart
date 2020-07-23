@@ -1,13 +1,11 @@
-import 'dart:math';
-
+import 'package:auto_route/auto_route_annotations.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/providers/folder_provider.dart';
 import 'package:fileexplorer/theme/app_colors.dart';
 import 'package:fileexplorer/widgets/folder_view_tile.dart';
-import 'package:fileexplorer/widgets/item_list_tile.dart';
 import 'package:fileexplorer/widgets/loading_list_tile.dart';
 import 'package:fileexplorer/widgets/path_lane.dart';
-import 'package:fileexplorer/widgets/storage_box_browser.dart';
 import 'package:fileexplorer/widgets/styled_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -16,7 +14,7 @@ import 'package:provider/provider.dart';
 class FolderScreen extends StatefulWidget {
   final String path;
 
-  FolderScreen(this.path);
+  const FolderScreen({@required this.path});
 
   @override
   _FolderScreenState createState() => _FolderScreenState();
@@ -27,8 +25,10 @@ class _FolderScreenState extends State<FolderScreen>
   AnimationController controller;
   Animation<Offset> offset;
 
+
   @override
   void initState() {
+    super.initState();
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
 
@@ -38,17 +38,14 @@ class _FolderScreenState extends State<FolderScreen>
     ).animate(controller);
 
     FolderProvider folderProvider =
-        Provider.of<FolderProvider>(context, listen: false);
+    Provider.of<FolderProvider>(context, listen: false);
 
-    changeFolder(folderProvider);
-
-    super.initState();
+    folderProvider.updateFolderData(widget.path,notify: false);
   }
+
 
   @override
   void dispose() {
-    Provider.of<FolderProvider>(context, listen: false).resetPathBox();
-
     super.dispose();
   }
 
@@ -147,38 +144,48 @@ class _FolderScreenState extends State<FolderScreen>
                 },
               ),
             ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  var blazeFile = folderProvider.currentBlazeList[index];
-                  return folderProvider.isFree()
-                      ? FolderViewTile(
-                          file: blazeFile,
-                          onTap: () {
-                            folderProvider.onTap(index);
-                          },
-                          onLongPress: () {
-                            /*switch (controller.status) {
-                              case AnimationStatus.completed:
-                                controller.reverse();
-                                break;
-                              case AnimationStatus.dismissed:
-                                controller.forward();
-                                break;
-                              default:
-                            }*/
-                            var firstSelect = folderProvider.onLongPress(index);
+            FutureBuilder<List<BlazeFileEntity>>(
+              future: folderProvider.loadBlazeEntitiesInPath(),
+              builder: (context, snapshot) {
+                return folderProvider.isFree()
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            var blazeFile =
+                                folderProvider.currentBlazeList[index];
+                            return folderProvider.isFree()
+                                ? FolderViewTile(
+                                    file: blazeFile,
+                                    onTap: () {
+                                      folderProvider.onTap(index);
+                                    },
+                                    onLongPress: () {
+                                      /*switch (controller.status) {
+                                  case AnimationStatus.completed:
+                                    controller.reverse();
+                                    break;
+                                  case AnimationStatus.dismissed:
+                                    controller.forward();
+                                    break;
+                                  default:
+                                }*/
+                                      var firstSelect =
+                                          folderProvider.onLongPress(index);
 
-                            if (firstSelect) controller.forward();
+                                      if (firstSelect) controller.forward();
+                                    },
+                                    selectType: blazeFile.selectType,
+                                  )
+                                : const LoadingListTile();
                           },
-                          selectType: blazeFile.selectType,
-                        )
-                      : const LoadingListTile();
-                },
-                childCount: folderProvider.isFree()
-                    ? folderProvider.currentBlazeList.length
-                    : 20,
-              ),
+                          childCount: folderProvider.isFree()
+                              ? folderProvider.currentBlazeList.length
+                              : 20,
+                        ),
+                      )
+                    : SliverFillRemaining(
+                        child: Center(child: CircularProgressIndicator()));
+              },
             ),
           ],
         ),
@@ -262,6 +269,6 @@ class _FolderScreenState extends State<FolderScreen>
   }
 
   changeFolder(FolderProvider folderProvider) async {
-    await folderProvider.updateFolderData(widget.path);
+    folderProvider.updateFolderData(widget.path);
   }
 }

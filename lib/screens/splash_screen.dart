@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/screens/image_category_screen.dart';
 import 'package:fileexplorer/screens/main_screen.dart';
@@ -45,26 +46,14 @@ class _SplashState extends State<Splash> {
           .then((v) async {
         PermissionStatus permission1 = await Permission.storage.status;
         if (permission1 == PermissionStatus.granted) {
-          Navigator.pushReplacement(
-            context,
-            PageTransition(
-              type: PageTransitionType.rightToLeft,
-              child: MainScreen(),
-            ),
-          );
+          ExtendedNavigator.of(context).popAndPush("/home");
           Timer(Duration(seconds: 1), () {
             Provider.of<BaseProvider>(context, listen: false).initializeBlaze();
           });
         }
       });
     } else {
-      Navigator.pushReplacement(
-        context,
-        PageTransition(
-          type: PageTransitionType.rightToLeft,
-          child: MainScreen(),
-        ),
-      );
+      ExtendedNavigator.of(context).popAndPush("/home");
       Provider.of<BaseProvider>(context, listen: false).initializeBlaze();
     }
   }

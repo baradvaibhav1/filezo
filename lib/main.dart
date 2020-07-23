@@ -1,5 +1,7 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/providers/folder_provider.dart';
+import 'package:fileexplorer/router.gr.dart';
 import 'package:fileexplorer/screens/creation_screen.dart';
 import 'package:fileexplorer/screens/creation_screen_zero.dart';
 import 'package:fileexplorer/screens/main_screen.dart';
@@ -19,14 +21,14 @@ void main() {
         ChangeNotifierProvider(create: (_) => BaseProvider()),
         ChangeNotifierProxyProvider<BaseProvider, FolderProvider>(
           create: (_) => FolderProvider(),
-          update: (_, baseProvider, folderProvider) => folderProvider..rebase(baseProvider),
+          update: (_, baseProvider, folderProvider) =>
+              folderProvider..rebase(baseProvider),
         ),
       ],
       child: MyApp(),
     ),
   );
 }
-
 
 class CustomImageCache extends WidgetsFlutterBinding {
   @override
@@ -70,7 +72,38 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: Splash(),
+      builder: ExtendedNavigator.builder(
+        router: Router(),
+        builder: (context, extendedNav) => Theme(
+          data: ThemeData(
+            brightness: Brightness.light,
+            primaryColor: const Color(0xff4591F2),
+            primaryColorDark: const Color(0xff456AEF),
+            scaffoldBackgroundColor: const Color(0xffFAFAFA),
+            //: const Color(0xff06BD46),
+            appBarTheme: AppBarTheme(
+              brightness: Brightness.light,
+              color: Colors.white,
+              iconTheme: IconThemeData(
+                color: const Color(0xff293B63),
+              ),
+              actionsIconTheme: IconThemeData(
+                color: const Color(0xff293B63),
+              ),
+              elevation: 1,
+            ),
+            iconTheme: IconThemeData(color: const Color(0xff293B63)),
+            dividerTheme: DividerThemeData(
+              color: Colors.grey.withOpacity(0.1),
+              thickness: 1,
+            ),
+            textTheme: GoogleFonts.poppinsTextTheme(
+              Theme.of(context).textTheme,
+            ),
+          ),
+          child: extendedNav,
+        ),
+      ),
     );
   }
 }

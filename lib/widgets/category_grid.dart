@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:fileexplorer/data/category_items.dart';
 import 'package:fileexplorer/screens/image_category_screen.dart';
 import 'package:fileexplorer/widgets/category_button.dart';
@@ -14,14 +15,8 @@ class CategoryGrid extends StatelessWidget {
           children: <Widget>[
             CategoryButton(
               data: CategoryItems.Images,
-              onTap: (){
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(
-                    transitionDuration: Duration(milliseconds: 600),
-                    pageBuilder: (_, __, ___) => ImageCategoryScreen(),
-                  ),
-                );
+              onTap: () {
+                ExtendedNavigator.of(context).push("/image_category");
               },
             ),
             CategoryButton(
@@ -38,7 +33,6 @@ class CategoryGrid extends StatelessWidget {
         CustomSpaceBoxH(24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
           children: <Widget>[
             CategoryButton(
               data: CategoryItems.Music,
