@@ -13,32 +13,29 @@ class BlazeCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: alignment,
-      child: Material(
-        color: selectType == SelectType.Selected ? Theme.of(context).primaryColorDark : Colors.transparent,
-        shape: CircleBorder(
-          side: BorderSide(
-            color: selectType == SelectType.Available
-                ? Colors.black26
-                : Colors.transparent,
-            width: 1.5,
-          ),
+    return Material(
+      color: selectType == SelectType.Selected ? Theme.of(context).primaryColorDark : Colors.transparent,
+      shape: CircleBorder(
+        side: BorderSide(
+          color: selectType == SelectType.Available
+              ? Colors.black26
+              : Colors.transparent,
+          width: 1.5,
         ),
-        child: InkWell(
-          onTap: onToggle,
-          child: Padding(
-            padding: EdgeInsets.all(padding),
-            child: Visibility(
-              visible: selectType == SelectType.Selected,
-              maintainSize: true,
-              maintainAnimation: true,
-              maintainState: true,
-              child: Icon(
-                EvaIcons.checkmark,
-                size: 16,
-                color: Colors.white,
-              ),
+      ),
+      child: InkWell(
+        onTap: onToggle,
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: Visibility(
+            visible: selectType == SelectType.Selected,
+            maintainSize: true,
+            maintainAnimation: true,
+            maintainState: true,
+            child: Icon(
+              EvaIcons.checkmark,
+              size: 16,
+              color: Colors.white,
             ),
           ),
         ),

@@ -11,6 +11,7 @@ import 'package:fileexplorer/models/storage_box_data.dart';
 import 'package:fileexplorer/providers/base_provider.dart';
 import 'package:fileexplorer/utils/file_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 class FolderProvider extends ChangeNotifier {
   BaseProvider _baseProvider;
@@ -25,6 +26,7 @@ class FolderProvider extends ChangeNotifier {
   ViewState viewState = ViewState.Free;
   SelectType selectState = SelectType.UnAvailable;
   List<PathKey> pathKeyList = [];
+  MethodChannel platform = MethodChannel('com.catalyst06.blaze/storage');
 
   FolderProvider();
 

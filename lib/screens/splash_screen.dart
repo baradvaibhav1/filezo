@@ -21,7 +21,15 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
 
-  bool _rootAccess = false;
+  bool _rootStatus = false;
+
+
+  @override
+  void initState() {
+    super.initState();
+    initRootRequest();
+    startTimeout();
+  }
 
   startTimeout() {
     return Timer(Duration(seconds: 2), handleTimeout);
@@ -60,11 +68,7 @@ class _SplashState extends State<Splash> {
 
 
 
-  @override
-  void initState() {
-    super.initState();
-    startTimeout();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,5 +99,12 @@ class _SplashState extends State<Splash> {
         ),
       ),
     );
+  }
+
+  Future<void> initRootRequest() async {
+    bool rootStatus = await RootAccess.rootAccess;
+    setState(() {
+      _rootStatus = rootStatus;
+    });
   }
 }

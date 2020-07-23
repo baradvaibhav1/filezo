@@ -13,8 +13,10 @@ import androidx.core.content.ContextCompat
 import com.catalyst06.fileexplorer.enums.VolumeType
 import com.catalyst06.fileexplorer.models.BlazeVolume
 import com.google.gson.Gson
+import com.topjohnwu.superuser.io.SuFile
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.File
@@ -25,6 +27,7 @@ class MainActivity : FlutterActivity() {
     lateinit var storageManager: StorageManager
     val gson = Gson()
 
+
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
 
@@ -34,11 +37,39 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
                 .setMethodCallHandler { call, result ->
-                    when {
-                        call.method == "getVolumes" -> result.success(getVolumes())
+
+                    when (call.method) {
+                        "getVolumes" -> result.success(getVolumes())
+                        "getFiles" -> result.success(getPathFiles(call))
                     }
                 }
+
+        //getFiles("/")
     }
+
+
+    fun getPathFiles(call : MethodCall): String {
+
+        val path : String? = call.argument("path")
+
+        val directory = SuFile(path);
+
+        val fileList = directory.listFiles();
+
+        Log.d("FileZo", fileList?.size.toString())
+        return fileList?.size.toString()
+    }
+
+
+    fun getFiles(path: String): String {
+        val directory = SuFile(path);
+
+        val fileList = directory.listFiles();
+
+        Log.d("FileZo", fileList?.size.toString())
+        return fileList?.size.toString()
+    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -57,7 +88,6 @@ class MainActivity : FlutterActivity() {
             val path = getPath(this, it) ?: ""
             //val stat = getStat(path)
             val statFs = getStatFsForStorageVolume(this, it)
-
 
 
             val volume =

@@ -58,7 +58,22 @@ flutter {
     source '../..'
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
+    def libsuVersion = '2.5.2'
+
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+
+    /* Optional: For using com.topjohnwu.superuser.io classes */
+    implementation "com.github.topjohnwu.libsu:io:${libsuVersion}"
+
+    /* Optional: For including prebuilt busybox binaries */
+    implementation "com.github.topjohnwu.libsu:busybox:${libsuVersion}"
+
 }
