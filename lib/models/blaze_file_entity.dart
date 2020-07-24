@@ -9,6 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
 part 'blaze_file_entity.freezed.dart';
+part 'blaze_file_entity.g.dart';
 
 @freezed
 abstract class BlazeFileEntity with _$BlazeFileEntity {
@@ -23,11 +24,19 @@ abstract class BlazeFileEntity with _$BlazeFileEntity {
     String timestamp,
     FileCategory category,
     int filesInsideCount,
-    File file,
-    int imageWidth,
-    int imageHeight,
-    int cacheWidth,
-    int cacheHeight,
     @Default(SelectType.UnAvailable) SelectType selectType,
+    @Default(false) bool isRoot,
+    @Default(0) int sTriplet,
+    @Default(0) int rTriplet,
+    @Default(0) int wTriplet,
+    @Default(0) int xTriplet,
+    String permissions,
+    String owner,
+    String group,
+    @Default(false) bool isSymlink,
+    String symlinkPath,
   }) = _BlazeFileEntity;
+
+
+  factory BlazeFileEntity.fromJson(Map<String, dynamic> json) => _$BlazeFileEntityFromJson(json);
 }

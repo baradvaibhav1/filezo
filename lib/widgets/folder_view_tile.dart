@@ -47,7 +47,7 @@ class FolderViewTile extends StatelessWidget {
                   isImage
                       ? Center(
                           child: Image.file(
-                            file.file,
+                            File(file.path),
                             fit: BoxFit.cover,
                             height: ICON_SIZE,
                             width: ICON_SIZE,

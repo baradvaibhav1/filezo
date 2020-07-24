@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:fileexplorer/enums/file_categories.dart';
 import 'package:fileexplorer/enums/file_entity_type.dart';
+import 'package:fileexplorer/models/blaze_entity_lite.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/path_box.dart';
 import 'package:fileexplorer/utils/file_ui_utils.dart';
@@ -67,7 +68,6 @@ class FileUtils {
         size: FileUtils.formatBytes(await fileSystemEntity.length(), 2),
         timestamp: (await fileSystemEntity.lastAccessed()).toIso8601String(),
         category: category,
-        file: fileSystemEntity,
         /*imageHeight: height,
         imageWidth: width,
         cacheHeight: (height * cacheRatio).floor(),
@@ -111,7 +111,6 @@ class FileUtils {
         size: FileUtils.formatBytes(fileSystemEntity.lengthSync(), 2),
         timestamp: (fileSystemEntity.lastAccessedSync()).toIso8601String(),
         category: category,
-        file: fileSystemEntity,
       );
     } else {
       var dir = Directory(fileSystemEntity.path);
@@ -137,6 +136,60 @@ class FileUtils {
         size: FileUtils.formatBytes(size, 2),
       );
     }
+  }
+
+  static BlazeFileEntity getBlazeFromLite(BlazeEntityLite blazeLite) {
+    if (isLiteFile(blazeLite)) {
+      var category = FileUIUtils.sortCategory(blazeLite.path);
+//      var isImage = category == FileCategory.Image ? true : false;
+      return BlazeFileEntity(
+        isRoot: true,
+        fileEntityType: FileEntityType.File,
+        path: blazeLite.path,
+        basename: basenameWithoutExtension(blazeLite.path),
+        extension: extension(blazeLite.path),
+        name: basename(blazeLite.path),
+        mime: mime(blazeLite.path),
+        size: FileUtils.formatBytes(blazeLite.size, 2),
+        timestamp: DateTime.fromMillisecondsSinceEpoch(blazeLite.timeStamp).toIso8601String(),
+        category: category,
+
+        sTriplet: blazeLite.sTriplet,
+        rTriplet: blazeLite.rTriplet,
+        wTriplet: blazeLite.wTriplet,
+        xTriplet: blazeLite.xTriplet,
+        permissions: blazeLite.permissions,
+        owner: blazeLite.owner,
+        group: blazeLite.group,
+        isSymlink: blazeLite.isSymlink,
+        symlinkPath: blazeLite.symlinkPath,
+      );
+    } else {
+      return BlazeFileEntity(
+        isRoot: true,
+        fileEntityType: FileEntityType.Folder,
+        path: blazeLite.path,
+        name: basename(blazeLite.path),
+        basename: basename(blazeLite.path),
+        timestamp: DateTime.fromMillisecondsSinceEpoch(blazeLite.timeStamp).toIso8601String(),
+        filesInsideCount: blazeLite.filesCount,
+        size: FileUtils.formatBytes(blazeLite.size, 2),
+
+        sTriplet: blazeLite.sTriplet,
+        rTriplet: blazeLite.rTriplet,
+        wTriplet: blazeLite.wTriplet,
+        xTriplet: blazeLite.xTriplet,
+        permissions: blazeLite.permissions,
+        owner: blazeLite.owner,
+        group: blazeLite.group,
+        isSymlink: blazeLite.isSymlink,
+        symlinkPath: blazeLite.symlinkPath,
+      );
+    }
+  }
+
+  static isLiteFile(BlazeEntityLite blazeEntityLite) {
+    return blazeEntityLite.fileEntityType == "File";
   }
 
   static bool isHidden(FileSystemEntity file) {

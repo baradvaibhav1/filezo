@@ -8,6 +8,9 @@ part of 'blaze_file_entity.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+BlazeFileEntity _$BlazeFileEntityFromJson(Map<String, dynamic> json) {
+  return _BlazeFileEntity.fromJson(json);
+}
 
 class _$BlazeFileEntityTearOff {
   const _$BlazeFileEntityTearOff();
@@ -24,12 +27,17 @@ class _$BlazeFileEntityTearOff {
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file,
-      int imageWidth,
-      int imageHeight,
-      int cacheWidth,
-      int cacheHeight,
-      SelectType selectType = SelectType.UnAvailable}) {
+      SelectType selectType = SelectType.UnAvailable,
+      bool isRoot = false,
+      int sTriplet = 0,
+      int rTriplet = 0,
+      int wTriplet = 0,
+      int xTriplet = 0,
+      String permissions,
+      String owner,
+      String group,
+      bool isSymlink = false,
+      String symlinkPath}) {
     return _BlazeFileEntity(
       fileEntityType: fileEntityType,
       path: path,
@@ -41,12 +49,17 @@ class _$BlazeFileEntityTearOff {
       timestamp: timestamp,
       category: category,
       filesInsideCount: filesInsideCount,
-      file: file,
-      imageWidth: imageWidth,
-      imageHeight: imageHeight,
-      cacheWidth: cacheWidth,
-      cacheHeight: cacheHeight,
       selectType: selectType,
+      isRoot: isRoot,
+      sTriplet: sTriplet,
+      rTriplet: rTriplet,
+      wTriplet: wTriplet,
+      xTriplet: xTriplet,
+      permissions: permissions,
+      owner: owner,
+      group: group,
+      isSymlink: isSymlink,
+      symlinkPath: symlinkPath,
     );
   }
 }
@@ -65,13 +78,19 @@ mixin _$BlazeFileEntity {
   String get timestamp;
   FileCategory get category;
   int get filesInsideCount;
-  File get file;
-  int get imageWidth;
-  int get imageHeight;
-  int get cacheWidth;
-  int get cacheHeight;
   SelectType get selectType;
+  bool get isRoot;
+  int get sTriplet;
+  int get rTriplet;
+  int get wTriplet;
+  int get xTriplet;
+  String get permissions;
+  String get owner;
+  String get group;
+  bool get isSymlink;
+  String get symlinkPath;
 
+  Map<String, dynamic> toJson();
   $BlazeFileEntityCopyWith<BlazeFileEntity> get copyWith;
 }
 
@@ -90,12 +109,17 @@ abstract class $BlazeFileEntityCopyWith<$Res> {
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file,
-      int imageWidth,
-      int imageHeight,
-      int cacheWidth,
-      int cacheHeight,
-      SelectType selectType});
+      SelectType selectType,
+      bool isRoot,
+      int sTriplet,
+      int rTriplet,
+      int wTriplet,
+      int xTriplet,
+      String permissions,
+      String owner,
+      String group,
+      bool isSymlink,
+      String symlinkPath});
 }
 
 class _$BlazeFileEntityCopyWithImpl<$Res>
@@ -118,12 +142,17 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
     Object timestamp = freezed,
     Object category = freezed,
     Object filesInsideCount = freezed,
-    Object file = freezed,
-    Object imageWidth = freezed,
-    Object imageHeight = freezed,
-    Object cacheWidth = freezed,
-    Object cacheHeight = freezed,
     Object selectType = freezed,
+    Object isRoot = freezed,
+    Object sTriplet = freezed,
+    Object rTriplet = freezed,
+    Object wTriplet = freezed,
+    Object xTriplet = freezed,
+    Object permissions = freezed,
+    Object owner = freezed,
+    Object group = freezed,
+    Object isSymlink = freezed,
+    Object symlinkPath = freezed,
   }) {
     return _then(_value.copyWith(
       fileEntityType: fileEntityType == freezed
@@ -141,15 +170,20 @@ class _$BlazeFileEntityCopyWithImpl<$Res>
       filesInsideCount: filesInsideCount == freezed
           ? _value.filesInsideCount
           : filesInsideCount as int,
-      file: file == freezed ? _value.file : file as File,
-      imageWidth: imageWidth == freezed ? _value.imageWidth : imageWidth as int,
-      imageHeight:
-          imageHeight == freezed ? _value.imageHeight : imageHeight as int,
-      cacheWidth: cacheWidth == freezed ? _value.cacheWidth : cacheWidth as int,
-      cacheHeight:
-          cacheHeight == freezed ? _value.cacheHeight : cacheHeight as int,
       selectType:
           selectType == freezed ? _value.selectType : selectType as SelectType,
+      isRoot: isRoot == freezed ? _value.isRoot : isRoot as bool,
+      sTriplet: sTriplet == freezed ? _value.sTriplet : sTriplet as int,
+      rTriplet: rTriplet == freezed ? _value.rTriplet : rTriplet as int,
+      wTriplet: wTriplet == freezed ? _value.wTriplet : wTriplet as int,
+      xTriplet: xTriplet == freezed ? _value.xTriplet : xTriplet as int,
+      permissions:
+          permissions == freezed ? _value.permissions : permissions as String,
+      owner: owner == freezed ? _value.owner : owner as String,
+      group: group == freezed ? _value.group : group as String,
+      isSymlink: isSymlink == freezed ? _value.isSymlink : isSymlink as bool,
+      symlinkPath:
+          symlinkPath == freezed ? _value.symlinkPath : symlinkPath as String,
     ));
   }
 }
@@ -171,12 +205,17 @@ abstract class _$BlazeFileEntityCopyWith<$Res>
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file,
-      int imageWidth,
-      int imageHeight,
-      int cacheWidth,
-      int cacheHeight,
-      SelectType selectType});
+      SelectType selectType,
+      bool isRoot,
+      int sTriplet,
+      int rTriplet,
+      int wTriplet,
+      int xTriplet,
+      String permissions,
+      String owner,
+      String group,
+      bool isSymlink,
+      String symlinkPath});
 }
 
 class __$BlazeFileEntityCopyWithImpl<$Res>
@@ -201,12 +240,17 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
     Object timestamp = freezed,
     Object category = freezed,
     Object filesInsideCount = freezed,
-    Object file = freezed,
-    Object imageWidth = freezed,
-    Object imageHeight = freezed,
-    Object cacheWidth = freezed,
-    Object cacheHeight = freezed,
     Object selectType = freezed,
+    Object isRoot = freezed,
+    Object sTriplet = freezed,
+    Object rTriplet = freezed,
+    Object wTriplet = freezed,
+    Object xTriplet = freezed,
+    Object permissions = freezed,
+    Object owner = freezed,
+    Object group = freezed,
+    Object isSymlink = freezed,
+    Object symlinkPath = freezed,
   }) {
     return _then(_BlazeFileEntity(
       fileEntityType: fileEntityType == freezed
@@ -224,19 +268,25 @@ class __$BlazeFileEntityCopyWithImpl<$Res>
       filesInsideCount: filesInsideCount == freezed
           ? _value.filesInsideCount
           : filesInsideCount as int,
-      file: file == freezed ? _value.file : file as File,
-      imageWidth: imageWidth == freezed ? _value.imageWidth : imageWidth as int,
-      imageHeight:
-          imageHeight == freezed ? _value.imageHeight : imageHeight as int,
-      cacheWidth: cacheWidth == freezed ? _value.cacheWidth : cacheWidth as int,
-      cacheHeight:
-          cacheHeight == freezed ? _value.cacheHeight : cacheHeight as int,
       selectType:
           selectType == freezed ? _value.selectType : selectType as SelectType,
+      isRoot: isRoot == freezed ? _value.isRoot : isRoot as bool,
+      sTriplet: sTriplet == freezed ? _value.sTriplet : sTriplet as int,
+      rTriplet: rTriplet == freezed ? _value.rTriplet : rTriplet as int,
+      wTriplet: wTriplet == freezed ? _value.wTriplet : wTriplet as int,
+      xTriplet: xTriplet == freezed ? _value.xTriplet : xTriplet as int,
+      permissions:
+          permissions == freezed ? _value.permissions : permissions as String,
+      owner: owner == freezed ? _value.owner : owner as String,
+      group: group == freezed ? _value.group : group as String,
+      isSymlink: isSymlink == freezed ? _value.isSymlink : isSymlink as bool,
+      symlinkPath:
+          symlinkPath == freezed ? _value.symlinkPath : symlinkPath as String,
     ));
   }
 }
 
+@JsonSerializable()
 class _$_BlazeFileEntity
     with DiagnosticableTreeMixin
     implements _BlazeFileEntity {
@@ -251,13 +301,27 @@ class _$_BlazeFileEntity
       this.timestamp,
       this.category,
       this.filesInsideCount,
-      this.file,
-      this.imageWidth,
-      this.imageHeight,
-      this.cacheWidth,
-      this.cacheHeight,
-      this.selectType = SelectType.UnAvailable})
-      : assert(selectType != null);
+      this.selectType = SelectType.UnAvailable,
+      this.isRoot = false,
+      this.sTriplet = 0,
+      this.rTriplet = 0,
+      this.wTriplet = 0,
+      this.xTriplet = 0,
+      this.permissions,
+      this.owner,
+      this.group,
+      this.isSymlink = false,
+      this.symlinkPath})
+      : assert(selectType != null),
+        assert(isRoot != null),
+        assert(sTriplet != null),
+        assert(rTriplet != null),
+        assert(wTriplet != null),
+        assert(xTriplet != null),
+        assert(isSymlink != null);
+
+  factory _$_BlazeFileEntity.fromJson(Map<String, dynamic> json) =>
+      _$_$_BlazeFileEntityFromJson(json);
 
   @override
   final FileEntityType fileEntityType;
@@ -279,23 +343,39 @@ class _$_BlazeFileEntity
   final FileCategory category;
   @override
   final int filesInsideCount;
-  @override
-  final File file;
-  @override
-  final int imageWidth;
-  @override
-  final int imageHeight;
-  @override
-  final int cacheWidth;
-  @override
-  final int cacheHeight;
   @JsonKey(defaultValue: SelectType.UnAvailable)
   @override
   final SelectType selectType;
+  @JsonKey(defaultValue: false)
+  @override
+  final bool isRoot;
+  @JsonKey(defaultValue: 0)
+  @override
+  final int sTriplet;
+  @JsonKey(defaultValue: 0)
+  @override
+  final int rTriplet;
+  @JsonKey(defaultValue: 0)
+  @override
+  final int wTriplet;
+  @JsonKey(defaultValue: 0)
+  @override
+  final int xTriplet;
+  @override
+  final String permissions;
+  @override
+  final String owner;
+  @override
+  final String group;
+  @JsonKey(defaultValue: false)
+  @override
+  final bool isSymlink;
+  @override
+  final String symlinkPath;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'BlazeFileEntity(fileEntityType: $fileEntityType, path: $path, basename: $basename, extension: $extension, name: $name, mime: $mime, size: $size, timestamp: $timestamp, category: $category, filesInsideCount: $filesInsideCount, file: $file, imageWidth: $imageWidth, imageHeight: $imageHeight, cacheWidth: $cacheWidth, cacheHeight: $cacheHeight, selectType: $selectType)';
+    return 'BlazeFileEntity(fileEntityType: $fileEntityType, path: $path, basename: $basename, extension: $extension, name: $name, mime: $mime, size: $size, timestamp: $timestamp, category: $category, filesInsideCount: $filesInsideCount, selectType: $selectType, isRoot: $isRoot, sTriplet: $sTriplet, rTriplet: $rTriplet, wTriplet: $wTriplet, xTriplet: $xTriplet, permissions: $permissions, owner: $owner, group: $group, isSymlink: $isSymlink, symlinkPath: $symlinkPath)';
   }
 
   @override
@@ -313,12 +393,17 @@ class _$_BlazeFileEntity
       ..add(DiagnosticsProperty('timestamp', timestamp))
       ..add(DiagnosticsProperty('category', category))
       ..add(DiagnosticsProperty('filesInsideCount', filesInsideCount))
-      ..add(DiagnosticsProperty('file', file))
-      ..add(DiagnosticsProperty('imageWidth', imageWidth))
-      ..add(DiagnosticsProperty('imageHeight', imageHeight))
-      ..add(DiagnosticsProperty('cacheWidth', cacheWidth))
-      ..add(DiagnosticsProperty('cacheHeight', cacheHeight))
-      ..add(DiagnosticsProperty('selectType', selectType));
+      ..add(DiagnosticsProperty('selectType', selectType))
+      ..add(DiagnosticsProperty('isRoot', isRoot))
+      ..add(DiagnosticsProperty('sTriplet', sTriplet))
+      ..add(DiagnosticsProperty('rTriplet', rTriplet))
+      ..add(DiagnosticsProperty('wTriplet', wTriplet))
+      ..add(DiagnosticsProperty('xTriplet', xTriplet))
+      ..add(DiagnosticsProperty('permissions', permissions))
+      ..add(DiagnosticsProperty('owner', owner))
+      ..add(DiagnosticsProperty('group', group))
+      ..add(DiagnosticsProperty('isSymlink', isSymlink))
+      ..add(DiagnosticsProperty('symlinkPath', symlinkPath));
   }
 
   @override
@@ -351,23 +436,36 @@ class _$_BlazeFileEntity
             (identical(other.filesInsideCount, filesInsideCount) ||
                 const DeepCollectionEquality()
                     .equals(other.filesInsideCount, filesInsideCount)) &&
-            (identical(other.file, file) ||
-                const DeepCollectionEquality().equals(other.file, file)) &&
-            (identical(other.imageWidth, imageWidth) ||
-                const DeepCollectionEquality()
-                    .equals(other.imageWidth, imageWidth)) &&
-            (identical(other.imageHeight, imageHeight) ||
-                const DeepCollectionEquality()
-                    .equals(other.imageHeight, imageHeight)) &&
-            (identical(other.cacheWidth, cacheWidth) ||
-                const DeepCollectionEquality()
-                    .equals(other.cacheWidth, cacheWidth)) &&
-            (identical(other.cacheHeight, cacheHeight) ||
-                const DeepCollectionEquality()
-                    .equals(other.cacheHeight, cacheHeight)) &&
             (identical(other.selectType, selectType) ||
                 const DeepCollectionEquality()
-                    .equals(other.selectType, selectType)));
+                    .equals(other.selectType, selectType)) &&
+            (identical(other.isRoot, isRoot) ||
+                const DeepCollectionEquality().equals(other.isRoot, isRoot)) &&
+            (identical(other.sTriplet, sTriplet) ||
+                const DeepCollectionEquality()
+                    .equals(other.sTriplet, sTriplet)) &&
+            (identical(other.rTriplet, rTriplet) ||
+                const DeepCollectionEquality()
+                    .equals(other.rTriplet, rTriplet)) &&
+            (identical(other.wTriplet, wTriplet) ||
+                const DeepCollectionEquality()
+                    .equals(other.wTriplet, wTriplet)) &&
+            (identical(other.xTriplet, xTriplet) ||
+                const DeepCollectionEquality()
+                    .equals(other.xTriplet, xTriplet)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)) &&
+            (identical(other.owner, owner) ||
+                const DeepCollectionEquality().equals(other.owner, owner)) &&
+            (identical(other.group, group) ||
+                const DeepCollectionEquality().equals(other.group, group)) &&
+            (identical(other.isSymlink, isSymlink) ||
+                const DeepCollectionEquality()
+                    .equals(other.isSymlink, isSymlink)) &&
+            (identical(other.symlinkPath, symlinkPath) ||
+                const DeepCollectionEquality()
+                    .equals(other.symlinkPath, symlinkPath)));
   }
 
   @override
@@ -383,16 +481,26 @@ class _$_BlazeFileEntity
       const DeepCollectionEquality().hash(timestamp) ^
       const DeepCollectionEquality().hash(category) ^
       const DeepCollectionEquality().hash(filesInsideCount) ^
-      const DeepCollectionEquality().hash(file) ^
-      const DeepCollectionEquality().hash(imageWidth) ^
-      const DeepCollectionEquality().hash(imageHeight) ^
-      const DeepCollectionEquality().hash(cacheWidth) ^
-      const DeepCollectionEquality().hash(cacheHeight) ^
-      const DeepCollectionEquality().hash(selectType);
+      const DeepCollectionEquality().hash(selectType) ^
+      const DeepCollectionEquality().hash(isRoot) ^
+      const DeepCollectionEquality().hash(sTriplet) ^
+      const DeepCollectionEquality().hash(rTriplet) ^
+      const DeepCollectionEquality().hash(wTriplet) ^
+      const DeepCollectionEquality().hash(xTriplet) ^
+      const DeepCollectionEquality().hash(permissions) ^
+      const DeepCollectionEquality().hash(owner) ^
+      const DeepCollectionEquality().hash(group) ^
+      const DeepCollectionEquality().hash(isSymlink) ^
+      const DeepCollectionEquality().hash(symlinkPath);
 
   @override
   _$BlazeFileEntityCopyWith<_BlazeFileEntity> get copyWith =>
       __$BlazeFileEntityCopyWithImpl<_BlazeFileEntity>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$_$_BlazeFileEntityToJson(this);
+  }
 }
 
 abstract class _BlazeFileEntity implements BlazeFileEntity {
@@ -407,12 +515,20 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
       String timestamp,
       FileCategory category,
       int filesInsideCount,
-      File file,
-      int imageWidth,
-      int imageHeight,
-      int cacheWidth,
-      int cacheHeight,
-      SelectType selectType}) = _$_BlazeFileEntity;
+      SelectType selectType,
+      bool isRoot,
+      int sTriplet,
+      int rTriplet,
+      int wTriplet,
+      int xTriplet,
+      String permissions,
+      String owner,
+      String group,
+      bool isSymlink,
+      String symlinkPath}) = _$_BlazeFileEntity;
+
+  factory _BlazeFileEntity.fromJson(Map<String, dynamic> json) =
+      _$_BlazeFileEntity.fromJson;
 
   @override
   FileEntityType get fileEntityType;
@@ -435,17 +551,27 @@ abstract class _BlazeFileEntity implements BlazeFileEntity {
   @override
   int get filesInsideCount;
   @override
-  File get file;
-  @override
-  int get imageWidth;
-  @override
-  int get imageHeight;
-  @override
-  int get cacheWidth;
-  @override
-  int get cacheHeight;
-  @override
   SelectType get selectType;
+  @override
+  bool get isRoot;
+  @override
+  int get sTriplet;
+  @override
+  int get rTriplet;
+  @override
+  int get wTriplet;
+  @override
+  int get xTriplet;
+  @override
+  String get permissions;
+  @override
+  String get owner;
+  @override
+  String get group;
+  @override
+  bool get isSymlink;
+  @override
+  String get symlinkPath;
   @override
   _$BlazeFileEntityCopyWith<_BlazeFileEntity> get copyWith;
 }

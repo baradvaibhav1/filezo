@@ -10,7 +10,9 @@ import android.util.Log
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.catalyst06.fileexplorer.enums.FileEntityType
 import com.catalyst06.fileexplorer.enums.VolumeType
+import com.catalyst06.fileexplorer.models.BlazeEntityLite
 import com.catalyst06.fileexplorer.models.BlazeVolume
 import com.google.gson.Gson
 import com.topjohnwu.superuser.io.SuFile
@@ -48,16 +50,38 @@ class MainActivity : FlutterActivity() {
     }
 
 
-    fun getPathFiles(call : MethodCall): String {
-
-        val path : String? = call.argument("path")
+    fun getPathFiles(call: MethodCall): String {
+        val blazeEntityLiteList = arrayListOf<BlazeEntityLite>();
+        val path: String? = call.argument("path")
 
         val directory = SuFile(path);
 
-        val fileList = directory.listFiles();
+        val fileList = directory.listFiles()
+        Log.d("FileZo", "files fetched : ${fileList?.size}")
 
-        Log.d("FileZo", fileList?.size.toString())
-        return fileList?.size.toString()
+
+        fileList?.forEach {
+
+            val canWrite: Boolean = it.canWrite()
+            val canRead: Boolean = it.canRead()
+            val isFile: Boolean = it.isFile
+            val isSymlink = it.isSymlink
+            blazeEntityLiteList.add(
+                    BlazeEntityLite(
+                            fileEntityType = if (isFile) FileEntityType.File else FileEntityType.Folder,
+                            path = it.path,
+                            size = 0,
+                            timeStamp = 0,
+                            filesCount = 0,
+                            isSymlink = isSymlink,
+                            symlinkPath = ""
+                    )
+            )
+        }
+
+
+
+        return gson.toJson(blazeEntityLiteList)
     }
 
 
@@ -69,7 +93,6 @@ class MainActivity : FlutterActivity() {
         Log.d("FileZo", fileList?.size.toString())
         return fileList?.size.toString()
     }
-
 
 
     @RequiresApi(Build.VERSION_CODES.N)

@@ -36,7 +36,7 @@ class BlazeItemTile extends StatelessWidget {
               isImage
                   ? Center(
                       child: Image.file(
-                        file.file,
+                        File(file.path),
                         height: 48,
                         width: 48,
                         fit: BoxFit.cover,

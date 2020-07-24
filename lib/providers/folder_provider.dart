@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer' as Dev;
 import 'dart:io';
 import 'dart:math';
 
+import 'package:fileexplorer/enums/file_entity_type.dart';
 import 'package:fileexplorer/enums/select_type.dart';
 import 'package:fileexplorer/enums/view_states.dart';
+import 'package:fileexplorer/models/blaze_entity_lite.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:fileexplorer/models/path_box.dart';
 import 'package:fileexplorer/models/path_key.dart';
@@ -57,7 +61,8 @@ class FolderProvider extends ChangeNotifier {
     // notifyListeners();
   }
 
-  updateFolderData(String path, {bool addPath = true, bool notify = true}) async {
+  updateFolderData(String path,
+      {bool addPath = true, bool notify = true}) async {
     print("Update Called");
 
     if (loadedPath != path) {
@@ -95,7 +100,10 @@ class FolderProvider extends ChangeNotifier {
       currentFolderList.clear();
       currentFileList.clear();
 
-      await dirContents(Directory(currentPath));
+      if (currentBox != _baseProvider.rootBox)
+        await dirContents(Directory(currentPath));
+      else
+        await rootDirContents(currentPath);
 
       await sort();
 
@@ -104,11 +112,10 @@ class FolderProvider extends ChangeNotifier {
       // await currentBlazeList.addAll(list);
 
       print("Loading done");
-
+      loadedPath = currentPath;
       cancelLoading();
     }
 
-    loadedPath = currentPath;
     return currentBlazeList;
   }
 
@@ -157,6 +164,33 @@ class FolderProvider extends ChangeNotifier {
       } else if (fileOrDir is Directory) {
         currentFolderList.add(await FileUtils.getBlazeEntity(fileOrDir));
         print(fileOrDir.path);
+      }
+    }
+  }
+
+  Future<List<FileSystemEntity>> rootDirContents(String path) async {
+    var rootFilesString =
+        await platform.invokeMethod("getFiles", {"path": path});
+
+    var rootFiles = jsonDecode(rootFilesString) as List;
+
+    List<BlazeEntityLite> liteList = rootFiles
+        .map((fileJson) => BlazeEntityLite.fromJson(fileJson))
+        .toList();
+
+    //Dev.log(rootFilesString);
+    //print("Received Lite : ${liteList.length}");
+
+    List<BlazeFileEntity> fileList =
+        liteList.map((e) => FileUtils.getBlazeFromLite(e)).toList();
+
+    for (var fileOrDir in fileList) {
+      if (fileOrDir.fileEntityType == FileEntityType.File) {
+        currentFileList.add(fileOrDir);
+        //print(fileOrDir.path);
+      } else {
+        currentFolderList.add(fileOrDir);
+       //print(fileOrDir.path);
       }
     }
   }

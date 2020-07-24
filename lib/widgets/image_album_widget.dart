@@ -46,23 +46,23 @@ class ImageAlbumWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    StyledText(block.name,
-                    fontSize: 12,
+                    StyledText(
+                      block.name,
+                      fontSize: 12,
                       fontWeight: FontWeight.w700,
                       textColor: Colors.white,
                       alignment: Alignment.centerLeft,
                     ),
                     CustomSpaceBoxH(4),
-                    StyledText("${block.fileCount} items",
+                    StyledText(
+                      "${block.fileCount} items",
                       fontSize: 10,
                       fontWeight: FontWeight.w300,
                       textColor: Colors.grey,
                       alignment: Alignment.centerLeft,
-
                       textAlign: TextAlign.left,
                     ),
                     CustomSpaceBoxH(16),
-
                   ],
                 ),
               ],
@@ -75,7 +75,7 @@ class ImageAlbumWidget extends StatelessWidget {
           fit: BoxFit.cover,
           placeholder: MemoryImage(FileUtils.placeHolder),
           image: FileImage(
-            block.list[0].file,
+            File(block.list[0].path),
           ),
         ),
       ),

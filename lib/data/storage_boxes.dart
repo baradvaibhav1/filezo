@@ -31,6 +31,13 @@ class StorageBoxes {
     imgPath: "assets/images/onedrive.png",
   );
 
+  static const StorageBoxData RootBrowser = StorageBoxData(
+    boxType: BoxType.RootBrowser,
+    boxName: "Root Browser",
+    color: AppColors.oneDrive,
+    imgPath: "assets/images/onedrive.png",
+  );
+
 
   static StorageBoxData getData(BoxType boxType)
   {
@@ -44,6 +51,8 @@ class StorageBoxes {
         return GoogleDrive;
       case BoxType.OneDrive:
         return OneDrive;
+      case BoxType.RootBrowser:
+        return RootBrowser;
       default:
         return InternalStorage;
     }

@@ -22,6 +22,8 @@ class BaseProvider extends ChangeNotifier {
   List<Directory> storageVolumePaths = List(); //the mounted storage volumes
   List<StorageBoxData> localStorageBoxes = List();
   List<StorageBoxData> cloudStorageBoxes = List();
+  StorageBoxData rootBox = StorageBoxes.RootBrowser.copyWith(path: "/");
+  List<StorageBoxData> allStorageBoxes = List();
   List<BlazeFileEntity> allFileEntities = List();
   List<BlazeFileEntity> allFiles = List();
 
@@ -231,6 +233,9 @@ class BaseProvider extends ChangeNotifier {
     volInfoList.forEach((it) {
       localStorageBoxes.add(VolumeInfo.getStorageBox(it));
     });
+
+    allStorageBoxes.addAll(localStorageBoxes);
+    allStorageBoxes.add(rootBox); //explicitly adding RootStorage
   }
 
   getVolumeDirectories() async {
@@ -247,13 +252,13 @@ class BaseProvider extends ChangeNotifier {
   getStorageBoxFromPath(String path) {
     return localStorageBoxes
         .firstWhere((element) => path.contains(element.path), orElse: () {
-      return null;
+      return rootBox;
     });
   }
 
   getPrimaryStorage() {
-    return localStorageBoxes
-        .firstWhere((element) => element.boxType==BoxType.InternalStorage, orElse: () {
+    return localStorageBoxes.firstWhere(
+        (element) => element.boxType == BoxType.InternalStorage, orElse: () {
       return null;
     });
   }

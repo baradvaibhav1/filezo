@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fileexplorer/models/blaze_block.dart';
 import 'package:fileexplorer/models/blaze_file_entity.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +51,7 @@ class _ImageViewerScreenState extends State<ImageViewerScreen> {
           builder: (context, index) {
             return PhotoViewGalleryPageOptions(
               heroAttributes: PhotoViewHeroAttributes(tag: heroTag),
-              imageProvider: FileImage(widget.block.list[index].file),
+              imageProvider: FileImage(File(widget.block.list[index].path)),
               minScale: PhotoViewComputedScale.contained * 0.8,
               maxScale: PhotoViewComputedScale.covered * 2,
             );

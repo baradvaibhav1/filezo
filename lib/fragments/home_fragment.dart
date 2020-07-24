@@ -70,7 +70,7 @@ class HomeFragment extends StatelessWidget {
     List<Widget> list = [
       CustomSpaceBoxH(24),
       BoxCarousel(
-        storageBoxes: baseProvider.localStorageBoxes,
+        storageBoxes: baseProvider.allStorageBoxes,
       ),
       CustomSpaceBoxH(16),
       HeadingRow(
