@@ -69,24 +69,25 @@ class MainActivity : FlutterActivity(), AsynchronousMethodChannel.MethodCallHand
         val blazeEntityLiteList = arrayListOf<BlazeEntityLite>();
         val path: String? = call.argument("path")
 
-        val directory = SuFile(path);
+        val directory = SuFile(path)
 
         val fileList = directory.listFiles { file, s ->
-            val isFile: Boolean = false
-            val canonicalPath = file.canonicalPath
+            val suFile = SuFile(s)
+            val isFile: Boolean = suFile.isFile
+            val isSymlink = suFile.isSymlink
             blazeEntityLiteList.add(
                     BlazeEntityLite(
-                            fileEntityType = FileEntityType.Folder,
+                            fileEntityType = if (isFile) FileEntityType.File else FileEntityType.Folder,
                             path = s,
                             size = 0,
                             timeStamp = 0,
-                            filesCount = 0,
-                            isSymlink = false,
-                            symlinkPath = canonicalPath
+                            filesCount =  0,
+                            isSymlink = isSymlink,
+                            symlinkPath = ""
                     )
             )
         }
-        Log.d("FileZo", "files fetch : ${fileList?.size}")
+        Log.d("FileZo", "files pulled : ${fileList?.size}")
 
 //        fileList?.forEach {
 //

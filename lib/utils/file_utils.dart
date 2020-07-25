@@ -141,6 +141,7 @@ class FileUtils {
   static BlazeFileEntity getBlazeFromLite(BlazeEntityLite blazeLite) {
     if (isLiteFile(blazeLite)) {
       var category = FileUIUtils.sortCategory(blazeLite.path);
+      var file = File(blazeLite.path);
 //      var isImage = category == FileCategory.Image ? true : false;
       return BlazeFileEntity(
         isRoot: true,
