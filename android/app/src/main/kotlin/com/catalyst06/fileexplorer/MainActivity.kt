@@ -22,13 +22,21 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import io.flutter.plugins.asynchronous_method_channel.AsynchronousMethodChannel
 
-class MainActivity : FlutterActivity() {
+
+class MainActivity : FlutterActivity(), AsynchronousMethodChannel.MethodCallHandler {
     private val CHANNEL = "com.catalyst06.blaze/storage"
 
     lateinit var storageManager: StorageManager
     val gson = Gson()
 
+    private val scope = CoroutineScope(Dispatchers.IO)
+    var filesString = ""
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
@@ -37,51 +45,59 @@ class MainActivity : FlutterActivity() {
                 getSystemService(android.content.Context.STORAGE_SERVICE) as StorageManager
 
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
-                .setMethodCallHandler { call, result ->
+        AsynchronousMethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler(this)
 
-                    when (call.method) {
-                        "getVolumes" -> result.success(getVolumes())
-                        "getFiles" -> result.success(getPathFiles(call))
-                    }
-                }
 
-        //getFiles("/")
     }
 
 
-    fun getPathFiles(call: MethodCall): String {
+    override fun onMethodCall(call: MethodCall, result: AsynchronousMethodChannel.Result) {
+        when (call.method) {
+            "getVolumes" -> result.success(getVolumes())
+            "getFiles" -> {
+                scope.launch(Dispatchers.IO) {
+                    val fileString = getPathFiles(call)
+                    scope.launch(Dispatchers.Main) {
+                        result.successAsynchronous(fileString)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun getPathFiles(call: MethodCall): String = withContext(Dispatchers.IO) {
         val blazeEntityLiteList = arrayListOf<BlazeEntityLite>();
         val path: String? = call.argument("path")
 
         val directory = SuFile(path);
 
-        val fileList = directory.listFiles()
-        Log.d("FileZo", "files fetched : ${fileList?.size}")
-
-
-        fileList?.forEach {
-
-            val canWrite: Boolean = it.canWrite()
-            val canRead: Boolean = it.canRead()
-            val isFile: Boolean = it.isFile
-            val isSymlink = it.isSymlink
+        val fileList = directory.listFiles { file, s ->
+            val isFile: Boolean = false
+            val canonicalPath = file.canonicalPath
             blazeEntityLiteList.add(
                     BlazeEntityLite(
-                            fileEntityType = if (isFile) FileEntityType.File else FileEntityType.Folder,
-                            path = it.path,
+                            fileEntityType = FileEntityType.Folder,
+                            path = s,
                             size = 0,
                             timeStamp = 0,
                             filesCount = 0,
-                            isSymlink = isSymlink,
-                            symlinkPath = ""
+                            isSymlink = false,
+                            symlinkPath = canonicalPath
                     )
             )
         }
+        Log.d("FileZo", "files fetch : ${fileList?.size}")
+
+//        fileList?.forEach {
+//
+//        }
+
+        Log.d("FileZo", "Files Loaded")
 
 
+        filesString = gson.toJson(blazeEntityLiteList)
 
-        return gson.toJson(blazeEntityLiteList)
+        return@withContext filesString
     }
 
 
@@ -95,7 +111,6 @@ class MainActivity : FlutterActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun getVolumes(): String {
         val volumeList = arrayListOf<BlazeVolume>()
 
@@ -127,7 +142,6 @@ class MainActivity : FlutterActivity() {
 
         val json = gson.toJson(volumeList)
         Log.d("Blaze", json)
-
 
 
         return json

@@ -105,13 +105,14 @@ class FolderProvider extends ChangeNotifier {
       else
         await rootDirContents(currentPath);
 
+      print("Loading done");
       await sort();
 
       print(currentFolderList.length);
       print(currentFileList.length);
       // await currentBlazeList.addAll(list);
 
-      print("Loading done");
+
       loadedPath = currentPath;
       cancelLoading();
     }
